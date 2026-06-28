@@ -20,9 +20,9 @@ Options (edit the constants at the top of the file):
   MAX_ROWS    - set to a number to limit how many rows to process (None = all)
 """
 
+import asyncio
 import csv
 import re
-import time
 import sys
 from pathlib import Path
 
@@ -33,6 +33,7 @@ OUTPUT_CSV = "it_sponsors_with_websites.csv"
 DELAY_SEC  = 1.5        # pause between searches
 START_FROM = 0          # resume from this 0-based row index
 MAX_ROWS   = None       # None = all rows
+CONCURRENCY = 8         # max concurrent website searches
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -86,9 +87,35 @@ def best_url_from_results(results: list[dict], name: str) -> str:
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
-def main() -> None:
+def run_search(query: str) -> list[dict]:
+    from ddgs import DDGS
+
+    with DDGS(timeout=15) as ddgs:
+        return list(ddgs.text(query, max_results=8))
+
+
+async def search_website(name: str, sem: asyncio.Semaphore) -> tuple[str, str]:
+    query = f"{name} official website UK"
     try:
-        from ddgs import DDGS
+        async with sem:
+            results = await asyncio.to_thread(run_search, query)
+        url = best_url_from_results(results, name)
+        await asyncio.sleep(DELAY_SEC)
+        return url, ""
+    except Exception as e:
+        await asyncio.sleep(DELAY_SEC * 2)
+        return "", str(e)
+
+
+async def process_row(idx: int, row: dict, sem: asyncio.Semaphore) -> tuple[int, dict, str, str, str]:
+    name = row.get("organisation_name", "").strip()
+    url, error = await search_website(name, sem)
+    return idx, row, name, url, error
+
+
+async def main_async() -> None:
+    try:
+        from ddgs import DDGS  # noqa: F401
     except ImportError:
         print("ERROR: 'ddgs' is not installed. Run:  pip install ddgs")
         sys.exit(1)
@@ -124,8 +151,8 @@ def main() -> None:
     if MAX_ROWS is not None:
         rows_to_process = rows_to_process[:MAX_ROWS]
 
-    total   = len(rows_to_process)
-    found   = 0
+    total = len(rows_to_process)
+    found = 0
     skipped = 0
 
     print(f"Processing {total} companies (starting at row {START_FROM})...")
@@ -138,27 +165,26 @@ def main() -> None:
     if write_header:
         writer.writeheader()
 
+    sem = asyncio.Semaphore(CONCURRENCY)
+    pending: list[tuple[int, dict]] = []
+
+    for idx, row in enumerate(rows_to_process, start=START_FROM + 1):
+        name = row.get("organisation_name", "").strip()
+        if name in done:
+            skipped += 1
+            print(f"[{idx}/{total+START_FROM}] SKIP (already done): {name}")
+            continue
+        pending.append((idx, row))
+
+    tasks = [asyncio.create_task(process_row(idx, row, sem)) for idx, row in pending]
+
     try:
-        for idx, row in enumerate(rows_to_process, start=START_FROM + 1):
-            name = row.get("organisation_name", "").strip()
+        for task in asyncio.as_completed(tasks):
+            idx, row, name, url, error = await task
 
-            # Skip already done
-            if name in done:
-                skipped += 1
-                print(f"[{idx}/{total+START_FROM}] SKIP (already done): {name}")
-                continue
-
-            query = f"{name} official website UK"
-            url   = ""
-            try:
-                with DDGS(timeout=15) as ddgs:
-                    results = list(ddgs.text(query, max_results=8))
-                url = best_url_from_results(results, name)
-            except Exception as e:
-                print(f"[{idx}/{total+START_FROM}] SEARCH ERROR for '{name}': {e}")
-                time.sleep(DELAY_SEC * 2)
-
-            if url:
+            if error:
+                print(f"[{idx}/{total+START_FROM}] SEARCH ERROR for '{name}': {error}")
+            elif url:
                 found += 1
                 print(f"[{idx}/{total+START_FROM}] FOUND: {name}  →  {url}")
             else:
@@ -173,13 +199,15 @@ def main() -> None:
                 "company_website":   url,
             })
             out_f.flush()
-
             done[name] = url
-            time.sleep(DELAY_SEC)
     finally:
         out_f.close()
 
     print(f"\nDone. {found}/{total} websites found. Results saved to {output_path.resolve()}")
+
+
+def main() -> None:
+    asyncio.run(main_async())
 
 
 if __name__ == "__main__":
