@@ -6,7 +6,7 @@ using DuckDuckGo, and writes results to it_sponsors_with_websites.csv.
 
 SETUP
 -----
-pip install ddgs requests
+pip install ddgs
 
 USAGE
 -----
@@ -15,7 +15,7 @@ python find_company_websites.py
 Options (edit the constants at the top of the file):
   INPUT_CSV   - path to the filtered IT sponsors CSV
   OUTPUT_CSV  - output path
-  DELAY_SEC   - seconds to wait between searches (avoid rate limiting, recommended >= 1.5)
+  DELAY_SEC   - seconds to wait between searches (avoid rate limiting)
   START_FROM  - row index (0-based) to resume from if the script was interrupted
   MAX_ROWS    - set to a number to limit how many rows to process (None = all)
 """
@@ -28,12 +28,13 @@ from pathlib import Path
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
-INPUT_CSV  = "it_sponsors_filtered.csv"
+INPUT_CSV = "it_sponsors_filtered.csv"
 OUTPUT_CSV = "it_sponsors_with_websites.csv"
-DELAY_SEC  = 1.5        # pause between searches
-START_FROM = 0          # resume from this 0-based row index
-MAX_ROWS   = None       # None = all rows
-CONCURRENCY = 8         # max concurrent website searches
+DELAY_SEC = 0.8          # pause between searches
+START_FROM = 0           # resume from this 0-based row index
+MAX_ROWS = None          # None = all rows
+CONCURRENCY = 15         # max concurrent website searches
+MAX_RESULTS = 8          # max DDG search results per query
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -42,6 +43,7 @@ STOP_WORDS = {
     "companies house", "companies-house", "gov.uk", "wikip", "facebook",
     "twitter", "instagram", "crunchbase", "bloomberg", "reuters", "ft.com",
 }
+
 
 def looks_like_company_site(url: str, name: str) -> bool:
     """Return True if a search-result URL looks like the official site."""
@@ -56,7 +58,7 @@ def slug_from_name(name: str) -> str:
     cleaned = re.sub(r"[^a-z0-9]", "", name.lower())
     for suffix in ("ltd", "limited", "plc", "uk", "inc", "corp", "group"):
         if cleaned.endswith(suffix):
-            cleaned = cleaned[: -len(suffix)]
+            cleaned = cleaned[:-len(suffix)]
     return cleaned
 
 
@@ -70,10 +72,8 @@ def best_url_from_results(results: list[dict], name: str) -> str:
             continue
         if not looks_like_company_site(href, name):
             continue
-        # Try to pull root domain
         m = re.match(r"(https?://[^/]+)", href)
         root = m.group(1) if m else href
-        # Score: higher if domain contains slug characters
         domain = re.sub(r"https?://(www\.)?", "", root).lower()
         domain_plain = re.sub(r"[^a-z0-9]", "", domain)
         score = 2 if (slug and slug[:6] in domain_plain) else 1
@@ -87,18 +87,33 @@ def best_url_from_results(results: list[dict], name: str) -> str:
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
-def run_search(query: str) -> list[dict]:
+def run_search_sync(query: str) -> list[dict]:
     from ddgs import DDGS
 
     with DDGS(timeout=15) as ddgs:
-        return list(ddgs.text(query, max_results=8))
+        return list(ddgs.text(query, max_results=MAX_RESULTS))
 
 
-async def search_website(name: str, sem: asyncio.Semaphore) -> tuple[str, str]:
+async def run_search_async(query: str) -> list[dict]:
+    from ddgs import AsyncDDGS
+
+    async with AsyncDDGS(timeout=15) as ddgs:
+        results = await ddgs.atext(query, max_results=MAX_RESULTS)
+        return list(results)
+
+
+async def search_website(name: str, sem: asyncio.Semaphore, use_native_async: bool) -> tuple[str, str]:
     query = f"{name} official website UK"
     try:
         async with sem:
-            results = await asyncio.to_thread(run_search, query)
+            if use_native_async:
+                try:
+                    results = await run_search_async(query)
+                except Exception:
+                    results = await asyncio.to_thread(run_search_sync, query)
+            else:
+                results = await asyncio.to_thread(run_search_sync, query)
+
         url = best_url_from_results(results, name)
         await asyncio.sleep(DELAY_SEC)
         return url, ""
@@ -107,38 +122,43 @@ async def search_website(name: str, sem: asyncio.Semaphore) -> tuple[str, str]:
         return "", str(e)
 
 
-async def process_row(idx: int, row: dict, sem: asyncio.Semaphore) -> tuple[int, dict, str, str, str]:
+async def process_row(
+    idx: int,
+    row: dict,
+    sem: asyncio.Semaphore,
+    use_native_async: bool,
+) -> tuple[int, dict, str, str, str]:
     name = row.get("organisation_name", "").strip()
-    url, error = await search_website(name, sem)
+    url, error = await search_website(name, sem, use_native_async)
     return idx, row, name, url, error
 
 
 async def main_async() -> None:
     try:
-        from ddgs import DDGS  # noqa: F401
+        import ddgs
     except ImportError:
         print("ERROR: 'ddgs' is not installed. Run:  pip install ddgs")
         sys.exit(1)
 
-    input_path  = Path(INPUT_CSV)
+    use_native_async = hasattr(ddgs, "AsyncDDGS")
+
+    input_path = Path(INPUT_CSV)
     output_path = Path(OUTPUT_CSV)
 
     if not input_path.exists():
         print(f"ERROR: Input file not found: {input_path.resolve()}")
         sys.exit(1)
 
-    # Read all rows
     with input_path.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         all_rows = list(reader)
 
-    # Load already-done results so we can resume
     done: dict[str, str] = {}
     if output_path.exists():
         with output_path.open(newline="", encoding="utf-8") as f:
             for r in csv.DictReader(f):
                 name = r.get("organisation_name", "").strip()
-                url  = r.get("company_website", "").strip()
+                url = r.get("company_website", "").strip()
                 if name and url:
                     done[name] = url
 
@@ -153,12 +173,10 @@ async def main_async() -> None:
 
     total = len(rows_to_process)
     found = 0
-    skipped = 0
 
     print(f"Processing {total} companies (starting at row {START_FROM})...")
     print(f"Output: {output_path.resolve()}\n")
 
-    # Open output in append mode so we can resume
     write_header = not output_path.exists() or output_path.stat().st_size == 0
     out_f = output_path.open("a", newline="", encoding="utf-8")
     writer = csv.DictWriter(out_f, fieldnames=fieldnames)
@@ -171,12 +189,14 @@ async def main_async() -> None:
     for idx, row in enumerate(rows_to_process, start=START_FROM + 1):
         name = row.get("organisation_name", "").strip()
         if name in done:
-            skipped += 1
             print(f"[{idx}/{total+START_FROM}] SKIP (already done): {name}")
             continue
         pending.append((idx, row))
 
-    tasks = [asyncio.create_task(process_row(idx, row, sem)) for idx, row in pending]
+    tasks = [
+        asyncio.create_task(process_row(idx, row, sem, use_native_async))
+        for idx, row in pending
+    ]
 
     try:
         for task in asyncio.as_completed(tasks):
@@ -192,11 +212,11 @@ async def main_async() -> None:
 
             writer.writerow({
                 "organisation_name": name,
-                "town_city":         row.get("town_city",   "").strip(),
-                "county":            row.get("county",      "").strip(),
-                "type_rating":       row.get("type_rating", "").strip(),
-                "route":             row.get("route",       "").strip(),
-                "company_website":   url,
+                "town_city": row.get("town_city", "").strip(),
+                "county": row.get("county", "").strip(),
+                "type_rating": row.get("type_rating", "").strip(),
+                "route": row.get("route", "").strip(),
+                "company_website": url,
             })
             out_f.flush()
             done[name] = url
