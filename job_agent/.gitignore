@@ -1,0 +1,13 @@
+.env
+agent.db
+__pycache__/
+*.pyc
+recordings/*.json
+screenshots/*
+cvs/*
+cover_letters/*
+logs/*
+
+# frontend
+dashboard/node_modules/
+dashboard/dist/
