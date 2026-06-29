@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+playwright
+beautifulsoup4
+lxml
+python-docx
+anthropic
+aiosqlite
+tiktoken
+loguru
+python-dotenv
+pydantic
