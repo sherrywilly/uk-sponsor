@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./job_agent
+      dockerfile: backend/Dockerfile
+    env_file:
+      - path: ./job_agent/.env
+        required: false
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./job_agent/recordings:/app/recordings
+      - ./job_agent/screenshots:/app/screenshots
+      - ./job_agent/cvs:/app/cvs
+      - ./job_agent/cover_letters:/app/cover_letters
+      - ./job_agent/logs:/app/logs
+
+  dashboard:
+    build:
+      context: ./job_agent/dashboard
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE: http://localhost:8000
+        VITE_WS_BASE: ws://localhost:8000
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"

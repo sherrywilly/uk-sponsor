@@ -1,0 +1,17 @@
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.env.*
+agent.db
+recordings/
+screenshots/
+cvs/
+cover_letters/
+logs/
+dashboard/node_modules/
+dashboard/dist/
