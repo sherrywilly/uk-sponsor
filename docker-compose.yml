@@ -1,0 +1,5 @@
+services:
+  csv-preview:
+    build:
+      context: .
+    image: uk-sponsor-csv-preview:latest
