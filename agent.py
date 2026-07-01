@@ -1,10 +1,17 @@
 """
 agent.py — LLM-powered reasoning layer.
 
-Supports both OpenAI and Anthropic as providers, selected via the AI_PROVIDER
-environment variable.  The agent is called with a structured prompt describing
-the current page state and returns structured JSON decisions that the rest of
-the application can act upon.
+Supports OpenAI, Anthropic, and OpenRouter as providers (selected via the
+AI_PROVIDER environment variable).
+
+Phase 2: the agent is fully generic — it has no knowledge of careers pages,
+job scraping, or any other domain.  It exposes a single public method,
+decide_action(), which receives a structured observation of the current browser
+state and returns a tool-call decision.
+
+The domain-specific prompts (career finder, job extractor) now live in
+career_finder.py and job_scraper.py respectively, so this file remains a
+reusable reasoning primitive.
 """
 
 from __future__ import annotations
@@ -66,144 +73,113 @@ def _get_openrouter_client():  # type: ignore[return]
         raise ImportError("Install the openai package: pip install openai") from exc
 
 
-# ── System prompts ────────────────────────────────────────────────────────────
+# ── System prompt ─────────────────────────────────────────────────────────────
 
-_NAVIGATION_SYSTEM = """
-You are an expert web-navigation AI agent. You inspect the current state of a
-webpage and decide the single next action to take in order to find the company's
-Careers / Jobs page.
+def _build_system_prompt(tool_catalogue: str) -> str:
+    return f"""
+You are an expert browser-automation AI agent. You control a real web browser
+through a set of tools. Your job is to complete the task you are given by
+choosing the right tool to call at each step.
 
-You understand that careers pages may be labelled:
-  Careers, Jobs, Join Us, Work With Us, Opportunities, Hiring, Vacancies,
-  Open Positions, We're Hiring, Team, People, Culture, etc.
+{tool_catalogue}
 
-Respond ONLY with valid JSON matching this schema (no markdown fences):
-{
-  "action": "click_link" | "click_button" | "navigate" | "scroll" | "found" | "give_up",
-  "target": "<link text, button text, or full URL>",
-  "reason": "<one-sentence explanation>"
-}
+At every step you will receive:
+  • task          — the overall goal
+  • iteration     — current step number
+  • current_url   — URL of the active browser tab
+  • page_title    — <title> of the active page
+  • page_text     — visible text (truncated to 3 000 chars)
+  • elements      — list of visible interactive elements
+  • history       — brief log of recent actions and their outcomes
+
+Respond ONLY with valid JSON (no markdown fences):
+{{
+  "reasoning": "<step-by-step thinking about what to do next>",
+  "tool": "<tool name from the catalogue>",
+  "args": {{ <tool arguments as a JSON object> }},
+  "expected_outcome": "<one sentence describing what you expect to happen>"
+}}
 
 Rules:
-- Use "found" when you are already on (or have found the URL of) the careers page.
-- Use "navigate" only when you have a direct URL to go to (set target=URL).
-- Use "give_up" after 10+ failed attempts or when there is clearly no careers page.
-- Never use "give_up" before thoroughly exploring the navigation.
-"""
-
-_EXTRACTION_SYSTEM = """
-You are an expert job-data extraction AI. Given the HTML / text of a job posting
-page, extract structured information and return ONLY valid JSON (no markdown).
-
-Return exactly this structure (use null for missing fields):
-{
-  "job_title": "...",
-  "location": "...",
-  "department": "...",
-  "employment_type": "...",
-  "salary": "...",
-  "job_description": "...",
-  "required_skills": ["..."],
-  "preferred_skills": ["..."],
-  "visa_sponsorship": "...",
-  "apply_url": "..."
-}
-
-For visa_sponsorship, look for:
-- Explicit mention of visa sponsorship, right-to-work requirements, or work
-  authorisation statements.
-- If nothing is mentioned, return null.
-- Summarise concisely (e.g. "Visa sponsorship available", "No sponsorship offered",
-  "Applicants must have the right to work in the UK").
-"""
-
-_JOB_LIST_SYSTEM = """
-You are an expert web-analysis AI. Given the HTML / text of a careers listing
-page, identify all job postings and return ONLY valid JSON (no markdown):
-
-{
-  "job_links": [
-    {"title": "...", "url": "..."},
-    ...
-  ]
-}
-
-Include every individual job posting URL you find. Do not include category pages,
-pagination links, or filter controls — only actual job listings.
-If no individual jobs are found (e.g. it's still a category landing page), return
-{"job_links": []}.
-"""
+- Choose exactly ONE tool per response.
+- Prefer clicking visible links / buttons by their text label over CSS selectors.
+- If a page has a cookie banner or popup, call dismiss_popup() before anything else.
+- If a tool fails, try an alternative approach rather than repeating the same call.
+- Call done(result=...) when the task is fully complete.
+- Call give_up(reason=...) only after exhausting all reasonable approaches.
+- Never fabricate URLs; only navigate to URLs you have observed on the page.
+""".strip()
 
 
 # ── Core agent class ──────────────────────────────────────────────────────────
 
 
 class AIAgent:
-    """Thin async wrapper around the chosen LLM provider."""
+    """
+    Generic LLM reasoning layer.
+
+    The only public method is decide_action(), which accepts a structured
+    browser observation and returns a tool-call decision.
+
+    For domain-specific extraction tasks (job details, link lists) callers
+    should use call_with_prompt() directly with their own system and user
+    prompts.
+    """
 
     def __init__(self) -> None:
         self._provider = AI_PROVIDER
         logger.info("AI agent initialised with provider: {}", self._provider)
+        # Import here to avoid circular import at module load time
+        from tools import tool_catalogue_text
+        self._system_prompt = _build_system_prompt(tool_catalogue_text())
 
-    # ── Public methods ────────────────────────────────────────────────────────
+    # ── Public API ────────────────────────────────────────────────────────────
 
-    async def decide_navigation_action(
+    async def decide_action(
         self,
-        page_text: str,
-        interactive_elements: list[dict],
-        current_url: str,
-        attempt: int,
+        task: str,
+        observation: dict,
+        history: list[str],
+        iteration: int,
     ) -> dict[str, Any]:
         """
-        Given the current page state, decide the next navigation action.
-        Returns a parsed dict with keys: action, target, reason.
+        Given the current browser state, decide the next tool to call.
+
+        Returns a dict with keys: reasoning, tool, args, expected_outcome.
         """
         elements_summary = "\n".join(
-            f"  [{i}] {el['tag'].upper()} | text='{el['text']}' | href='{el.get('href', '')}'"
-            for i, el in enumerate(interactive_elements[:80])  # cap at 80 items
+            f"  [{i}] {el['tag'].upper()} | text='{el['text']}'"
+            + (f" | href='{el['href']}'" if el.get("href") else "")
+            for i, el in enumerate(observation.get("interactive_elements", [])[:80])
+        )
+
+        history_text = (
+            "\n".join(f"  {h}" for h in history[-15:]) if history else "  (none yet)"
         )
 
         user_prompt = (
-            f"Current URL: {current_url}\n"
-            f"Attempt: {attempt}\n\n"
-            f"=== PAGE TEXT (first 3000 chars) ===\n{page_text[:3000]}\n\n"
+            f"task: {task}\n"
+            f"iteration: {iteration}\n"
+            f"current_url: {observation.get('current_url', '?')}\n"
+            f"page_title: {observation.get('page_title', '?')}\n\n"
+            f"=== PAGE TEXT (first 3000 chars) ===\n"
+            f"{observation.get('page_text_snippet', '')}\n\n"
             f"=== INTERACTIVE ELEMENTS ===\n{elements_summary}\n\n"
-            "Decide the next action to find the Careers/Jobs page."
+            f"=== RECENT HISTORY ===\n{history_text}\n\n"
+            "Choose the next tool to call."
         )
 
-        raw = await self._call_llm(_NAVIGATION_SYSTEM, user_prompt)
+        raw = await self._call_llm(self._system_prompt, user_prompt)
         return self._parse_json(raw)
 
-    async def extract_job_links(self, page_text: str, page_html: str, current_url: str) -> list[dict]:
+    async def call_with_prompt(self, system: str, user: str) -> dict[str, Any]:
         """
-        From a careers listing page, extract all individual job URLs.
-        Returns a list of {title, url} dicts.
-        """
-        user_prompt = (
-            f"Current URL: {current_url}\n\n"
-            f"=== PAGE TEXT (first 4000 chars) ===\n{page_text[:4000]}\n\n"
-            f"=== PAGE HTML SNIPPET (first 6000 chars) ===\n{page_html[:6000]}\n\n"
-            "Return all individual job listing URLs you can find."
-        )
-        raw = await self._call_llm(_JOB_LIST_SYSTEM, user_prompt)
-        data = self._parse_json(raw)
-        return data.get("job_links", [])
+        Low-level helper: send a custom system + user prompt to the LLM and
+        return the parsed JSON response.
 
-    async def extract_job_details(
-        self, page_text: str, page_html: str, current_url: str, company: str
-    ) -> dict[str, Any]:
+        Used by career_finder.py and job_scraper.py for domain-specific extraction.
         """
-        From an individual job posting page, extract structured job data.
-        Returns a dict matching the extraction schema.
-        """
-        user_prompt = (
-            f"Company: {company}\n"
-            f"Job URL: {current_url}\n\n"
-            f"=== PAGE TEXT (first 5000 chars) ===\n{page_text[:5000]}\n\n"
-            f"=== PAGE HTML SNIPPET (first 8000 chars) ===\n{page_html[:8000]}\n\n"
-            "Extract all job details."
-        )
-        raw = await self._call_llm(_EXTRACTION_SYSTEM, user_prompt)
+        raw = await self._call_llm(system, user)
         return self._parse_json(raw)
 
     # ── LLM calls ────────────────────────────────────────────────────────────
@@ -272,12 +248,10 @@ class AIAgent:
         """
         Extract and parse JSON from the LLM response, tolerating markdown fences.
         """
-        # Strip markdown code fences if present
         cleaned = re.sub(r"```(?:json)?\s*", "", raw).strip().rstrip("`").strip()
         try:
             return json.loads(cleaned)
         except json.JSONDecodeError:
-            # Try to find a JSON object / array anywhere in the response
             match = re.search(r"(\{.*\}|\[.*\])", cleaned, re.DOTALL)
             if match:
                 try:

@@ -1,6 +1,10 @@
 """
 job_scraper.py — Discovers and extracts individual job postings.
 
+Phase 2: domain-specific LLM prompts are kept here; the agent's generic
+decide_action() is used for browser navigation, and call_with_prompt() is
+used for structured extraction tasks (link discovery, detail extraction).
+
 Workflow:
   1. Start from the careers listing page.
   2. Ask the AI to identify all individual job URLs on the page.
@@ -29,6 +33,51 @@ _MAX_JOBS: int = 200
 
 # Regex patterns that usually indicate a "next page" / pagination link
 _NEXT_PAGE_RE = re.compile(r"\bnext\b|\bnext page\b|›|»|>", re.IGNORECASE)
+
+# ── Domain-specific prompts ───────────────────────────────────────────────────
+
+_JOB_LIST_SYSTEM = """
+You are an expert web-analysis AI. Given the HTML / text of a careers listing
+page, identify all job postings and return ONLY valid JSON (no markdown):
+
+{
+  "job_links": [
+    {"title": "...", "url": "..."},
+    ...
+  ]
+}
+
+Include every individual job posting URL you find. Do not include category pages,
+pagination links, or filter controls — only actual job listings.
+If no individual jobs are found (e.g. it's still a category landing page), return
+{"job_links": []}.
+"""
+
+_EXTRACTION_SYSTEM = """
+You are an expert job-data extraction AI. Given the HTML / text of a job posting
+page, extract structured information and return ONLY valid JSON (no markdown).
+
+Return exactly this structure (use null for missing fields):
+{
+  "job_title": "...",
+  "location": "...",
+  "department": "...",
+  "employment_type": "...",
+  "salary": "...",
+  "job_description": "...",
+  "required_skills": ["..."],
+  "preferred_skills": ["..."],
+  "visa_sponsorship": "...",
+  "apply_url": "..."
+}
+
+For visa_sponsorship, look for:
+- Explicit mention of visa sponsorship, right-to-work requirements, or work
+  authorisation statements.
+- If nothing is mentioned, return null.
+- Summarise concisely (e.g. "Visa sponsorship available", "No sponsorship offered",
+  "Applicants must have the right to work in the UK").
+"""
 
 
 class JobScraper:
@@ -72,11 +121,7 @@ class JobScraper:
             page_html = await self._browser.get_page_html()
 
             # Ask AI to extract job links
-            job_links = await self._agent.extract_job_links(
-                page_text=page_text,
-                page_html=page_html,
-                current_url=current_listing_url,
-            )
+            job_links = await self._extract_job_links(page_text, page_html, current_listing_url)
 
             # Fallback: try BeautifulSoup heuristic extraction
             if not job_links:
@@ -124,6 +169,19 @@ class JobScraper:
 
     # ── Private helpers ───────────────────────────────────────────────────────
 
+    async def _extract_job_links(
+        self, page_text: str, page_html: str, current_url: str
+    ) -> list[dict]:
+        """Ask the LLM to identify individual job URLs on the listing page."""
+        user_prompt = (
+            f"Current URL: {current_url}\n\n"
+            f"=== PAGE TEXT (first 4000 chars) ===\n{page_text[:4000]}\n\n"
+            f"=== PAGE HTML SNIPPET (first 6000 chars) ===\n{page_html[:6000]}\n\n"
+            "Return all individual job listing URLs you can find."
+        )
+        data = await self._agent.call_with_prompt(_JOB_LIST_SYSTEM, user_prompt)
+        return data.get("job_links", [])
+
     async def _extract_single_job(self, url: str) -> dict | None:
         """Navigate to a job page and extract structured data via the AI."""
         try:
@@ -133,18 +191,19 @@ class JobScraper:
             page_text = await self._browser.get_page_text()
             page_html = await self._browser.get_page_html()
 
-            raw = await self._agent.extract_job_details(
-                page_text=page_text,
-                page_html=page_html,
-                current_url=url,
-                company=self._company,
+            user_prompt = (
+                f"Company: {self._company}\n"
+                f"Job URL: {url}\n\n"
+                f"=== PAGE TEXT (first 5000 chars) ===\n{page_text[:5000]}\n\n"
+                f"=== PAGE HTML SNIPPET (first 8000 chars) ===\n{page_html[:8000]}\n\n"
+                "Extract all job details."
             )
+            raw = await self._agent.call_with_prompt(_EXTRACTION_SYSTEM, user_prompt)
 
             if not raw:
                 logger.warning("Empty extraction for: {}", url)
                 return None
 
-            # Normalise and enrich with metadata
             job = {
                 "company": self._company,
                 "job_title": raw.get("job_title") or "",
@@ -189,18 +248,12 @@ class JobScraper:
     def _heuristic_job_links(html: str, base_url: str) -> list[dict]:
         """
         BeautifulSoup fallback: find <a> tags that look like job postings.
-
-        A link is considered a job posting if:
-        - Its href is distinct from the base listing URL
-        - Its text is non-trivial (more than 3 words)
-        - It is inside a <li>, <article>, <div class="job…">, or similar container
         """
         soup = BeautifulSoup(html, "lxml")
         base_path = urlparse(base_url).path.rstrip("/")
         results: list[dict] = []
         seen: set[str] = set()
 
-        # Common patterns for job containers
         containers = soup.find_all(
             lambda tag: tag.name in {"li", "article", "div"}
             and any(
@@ -209,7 +262,6 @@ class JobScraper:
             )
         )
 
-        # If no obvious containers, fall back to all links
         if not containers:
             containers = [soup]
 
@@ -221,17 +273,14 @@ class JobScraper:
                 abs_href = urljoin(base_url, href)
                 link_path = urlparse(abs_href).path.rstrip("/")
 
-                # Skip if it's the same as the listing page
                 if link_path == base_path:
                     continue
-
-                # Skip if already seen
                 if abs_href in seen:
                     continue
                 seen.add(abs_href)
 
                 text = (a.get_text(separator=" ") or "").strip()
-                if len(text.split()) >= 2:  # at least 2 words
+                if len(text.split()) >= 2:
                     results.append({"title": text[:120], "url": abs_href})
 
         return results
@@ -244,12 +293,10 @@ class JobScraper:
 
     @staticmethod
     def _clean_text(text: str) -> str:
-        """Collapse whitespace in extracted text."""
         return re.sub(r"\s+", " ", text).strip()
 
     @staticmethod
     def _join_list(value: object) -> str:
-        """Coerce a list or string to a pipe-separated string for CSV."""
         if isinstance(value, list):
             return " | ".join(str(v) for v in value if v)
         if isinstance(value, str):

@@ -1,6 +1,10 @@
 """
 main.py — Entry point for the AI Career Discovery & Job Scraper.
 
+Phase 2: the pipeline now goes through the generic BrowserAgent for all
+browser-driving decisions.  Career-specific logic stays in career_finder.py
+and job_scraper.py; the AI layer in agent.py is fully domain-agnostic.
+
 Usage:
     python main.py <company_url> [--company "Company Name"]
 
@@ -10,9 +14,10 @@ Example:
 
 The script will:
   1. Launch a visible Chromium browser.
-  2. Use an LLM agent to navigate to the company's Careers/Jobs page.
+  2. Use BrowserAgent (observe→reason→act loop) to find the Careers page.
   3. Extract all job postings from that page.
   4. Export the results to output/jobs.csv.
+  5. Save a JSON action log to output/action_log_<timestamp>.json.
 """
 
 from __future__ import annotations
@@ -28,7 +33,6 @@ from loguru import logger
 load_dotenv()
 
 # ── Logging configuration ─────────────────────────────────────────────────────
-# Use a clean format with coloured levels and timestamps
 logger.remove()
 logger.add(
     sys.stderr,
@@ -54,9 +58,9 @@ logger.add(
 
 async def run(company_url: str, company_name: str) -> None:
     """
-    Full pipeline: open browser → find careers page → scrape jobs → export CSV.
+    Full pipeline:
+      open browser → BrowserAgent finds careers page → scrape jobs → export CSV.
     """
-    # Import here so logging is configured before module-level code in those files
     from agent import AIAgent
     from browser import browser_session
     from career_finder import CareerFinder
@@ -64,7 +68,7 @@ async def run(company_url: str, company_name: str) -> None:
     from job_scraper import JobScraper
 
     logger.info("=" * 60)
-    logger.info("AI Career Discovery & Job Scraper")
+    logger.info("AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]")
     logger.info("Company URL : {}", company_url)
     logger.info("Company Name: {}", company_name)
     logger.info("=" * 60)
@@ -73,7 +77,7 @@ async def run(company_url: str, company_name: str) -> None:
     exporter = CSVExporter()
 
     async with browser_session() as browser:
-        # ── Phase 1: find the careers page ──────────────────────────────
+        # ── Phase 1: BrowserAgent navigates to the careers page ──────────
         finder = CareerFinder(browser=browser, agent=agent)
         careers_url = await finder.find(company_url)
 
@@ -101,6 +105,7 @@ async def run(company_url: str, company_name: str) -> None:
 
         logger.info("=" * 60)
         logger.success("Done! {} job(s) saved to: {}", len(jobs), output_path)
+        logger.info("Action logs and screenshots saved to: output/")
         logger.info("=" * 60)
 
 
@@ -110,18 +115,16 @@ async def run(company_url: str, company_name: str) -> None:
 def _infer_company_name(url: str) -> str:
     """Derive a human-readable company name from the URL if none is given."""
     host = urlparse(url).netloc
-    # Strip common prefixes (www, careers, jobs)
     for prefix in ("www.", "careers.", "jobs.", "en."):
         if host.startswith(prefix):
             host = host[len(prefix):]
-    # Take the first part of the domain
     name = host.split(".")[0]
     return name.replace("-", " ").replace("_", " ").title()
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="AI-powered career page discovery and job scraper.",
+        description="AI-powered career page discovery and job scraper (Phase 2).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
