@@ -60,8 +60,10 @@ BASE_CV_TEXT = _load_base_cv_text()
 
 @dataclass(slots=True)
 class Settings:
-    anthropic_api_key: str
-    anthropic_base_url: str | None
+    openrouter_api_key: str
+    openrouter_base_url: str
+    openrouter_site_url: str | None
+    openrouter_app_name: str | None
     model_haiku: str
     model_sonnet: str
     playwright_headless: bool
@@ -69,10 +71,12 @@ class Settings:
 
 
 SETTINGS = Settings(
-    anthropic_api_key=os.getenv("ANTHROPIC_API_KEY", ""),
-    anthropic_base_url=os.getenv("ANTHROPIC_BASE_URL") or None,
-    model_haiku=os.getenv("MODEL_HAIKU", "claude-haiku-4-5"),
-    model_sonnet=os.getenv("MODEL_SONNET", "claude-sonnet-4-6"),
+    openrouter_api_key=os.getenv("OPENROUTER_API_KEY", ""),
+    openrouter_base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+    openrouter_site_url=os.getenv("OPENROUTER_SITE_URL") or None,
+    openrouter_app_name=os.getenv("OPENROUTER_APP_NAME", "uk-sponsor-agent") or None,
+    model_haiku=os.getenv("MODEL_HAIKU", "qwen/qwen3-coder-next"),
+    model_sonnet=os.getenv("MODEL_SONNET", "qwen/qwen3-coder-next"),
     playwright_headless=os.getenv("PLAYWRIGHT_HEADLESS", "true").lower() == "true",
     concurrency=max(1, min(5, int(os.getenv("AGENT_CONCURRENCY", "1")))),
 )

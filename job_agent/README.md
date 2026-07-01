@@ -22,4 +22,4 @@ docker compose up --build
   - `job_agent/cvs`
   - `job_agent/cover_letters`
   - `job_agent/logs`
-- Ensure `ANTHROPIC_API_KEY` is present in `job_agent/.env` for Claude-backed features.
+- Ensure `OPENROUTER_API_KEY` is present in `job_agent/.env` for model-backed features.
