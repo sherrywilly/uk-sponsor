@@ -21,9 +21,11 @@ load_dotenv()
 
 # ── Provider selection ────────────────────────────────────────────────────────
 
-AI_PROVIDER: str = os.getenv("AI_PROVIDER", "openai").lower()
+AI_PROVIDER: str = os.getenv("AI_PROVIDER", "openrouter").lower()
 OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o")
 ANTHROPIC_MODEL: str = os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022")
+OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o")
+OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
 
 
 def _get_openai_client():  # type: ignore[return]
@@ -50,6 +52,18 @@ def _get_anthropic_client():  # type: ignore[return]
         raise ImportError(
             "Install the anthropic package: pip install anthropic"
         ) from exc
+
+
+def _get_openrouter_client():  # type: ignore[return]
+    try:
+        from openai import AsyncOpenAI  # type: ignore
+
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY is not set.")
+        return AsyncOpenAI(api_key=api_key, base_url=OPENROUTER_BASE_URL)
+    except ImportError as exc:
+        raise ImportError("Install the openai package: pip install openai") from exc
 
 
 # ── System prompts ────────────────────────────────────────────────────────────
@@ -200,6 +214,8 @@ class AIAgent:
             return await self._call_openai(system, user)
         elif self._provider == "anthropic":
             return await self._call_anthropic(system, user)
+        elif self._provider == "openrouter":
+            return await self._call_openrouter(system, user)
         else:
             raise ValueError(f"Unknown AI_PROVIDER: {self._provider!r}")
 
@@ -231,6 +247,22 @@ class AIAgent:
         )
         text = response.content[0].text if response.content else ""
         logger.debug("Anthropic response: {}", text[:200])
+        return text
+
+    async def _call_openrouter(self, system: str, user: str) -> str:
+        client = _get_openrouter_client()
+        logger.debug("Calling OpenRouter ({}) …", OPENROUTER_MODEL)
+        response = await client.chat.completions.create(
+            model=OPENROUTER_MODEL,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.0,
+            max_tokens=2048,
+        )
+        text = response.choices[0].message.content or ""
+        logger.debug("OpenRouter response: {}", text[:200])
         return text
 
     # ── Utilities ─────────────────────────────────────────────────────────────
