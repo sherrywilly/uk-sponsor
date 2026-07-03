@@ -1,0 +1,49 @@
+2026-07-02 10:13:56 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 10:13:57 | INFO     | __main__:70 — ============================================================
+2026-07-02 10:13:57 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 10:13:57 | INFO     | __main__:72 — Company URL : https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:13:57 | INFO     | __main__:73 — Company Name: Adtran
+2026-07-02 10:13:57 | INFO     | __main__:74 — ============================================================
+2026-07-02 10:13:57 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 10:13:57 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 10:13:57 | INFO     | browser:98 — Browser ready.
+2026-07-02 10:13:57 | INFO     | career_finder:61 — Starting career-page search from: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:13:57 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:14:01 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 10:14:01 | INFO     | career_finder:81 — Heuristic found careers page: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:01 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:03 | SUCCESS  | __main__:90 — Careers page located: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:03 | INFO     | job_scraper:128 — Starting job scrape from: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:03 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:06 | INFO     | job_scraper:141 — Scraping listing page: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:06 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:14:10 | DEBUG    | agent:255 — OpenRouter response: {
+"job_links": [
+    {
+      "title": "Sales Director NSP",
+      "url": "https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474"
+    }
+  ]
+}
+2026-07-02 10:14:10 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 10:14:10 | INFO     | job_scraper:154 — Found 1 job link(s) on this page.
+2026-07-02 10:14:10 | INFO     | job_scraper:168 — Opening job: Privacy statement — https://www.adtran.com/en/about-us/legal/privacy-policy#:~:text=Adtran%20will%20only%20process%20Personal,purposes%20an%20individual%20later%20authorizes.
+2026-07-02 10:14:10 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/legal/privacy-policy#:~:text=Adtran%20will%20only%20process%20Personal,purposes%20an%20individual%20later%20authorizes.
+2026-07-02 10:14:12 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:14:13 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:14:13 | ERROR    | job_scraper:261 — Error extracting job at https://www.adtran.com/en/about-us/legal/privacy-policy#:~:text=Adtran%20will%20only%20process%20Personal,purposes%20an%20individual%20later%20authorizes.: 'NoneType' object is not subscriptable
+2026-07-02 10:14:15 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:14:15 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474
+2026-07-02 10:14:18 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:14:20 | DEBUG    | agent:255 — OpenRouter response: {
+    "next_page_url": null
+}
+2026-07-02 10:14:20 | INFO     | job_scraper:199 — Scraping complete. Total jobs extracted: 0
+2026-07-02 10:14:20 | WARNING  | __main__:97 — No jobs were extracted from https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Remote---Texas/Sales-Director-NSP_R005474. The page may use a JS framework that renders asynchronously, or there are no open positions.
+2026-07-02 10:14:20 | WARNING  | csv_exporter:66 — No jobs to export.
+2026-07-02 10:14:20 | INFO     | __main__:106 — ============================================================
+2026-07-02 10:14:20 | SUCCESS  | __main__:107 — Done! 0 job(s) saved to: output/jobs.csv
+2026-07-02 10:14:20 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 10:14:20 | INFO     | __main__:109 — ============================================================
+2026-07-02 10:14:20 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 10:14:20 | INFO     | browser:112 — Browser shut down.

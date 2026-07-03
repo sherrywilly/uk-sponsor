@@ -174,6 +174,7 @@ class BrowserAgent:
             current_url = await self._browser.get_current_url()
             title = await self._browser.page.title()
             page_text = await self._browser.get_page_text()
+            page_html = await self._browser.get_page_html()
             elements = await self._browser.get_interactive_elements()
         except Exception as exc:
             logger.warning("Observation error: {}", exc)
@@ -183,6 +184,7 @@ class BrowserAgent:
             "current_url": current_url,
             "page_title": title,
             "page_text_snippet": page_text[:3000],
+            "page_html_snippet": page_html[:5000],
             "interactive_elements": elements[:80],
         }
 

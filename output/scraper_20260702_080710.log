@@ -1,0 +1,7 @@
+2026-07-02 08:07:12 | INFO     | __main__:70 — ============================================================
+2026-07-02 08:07:12 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 08:07:12 | INFO     | __main__:72 — Company URL : https://apply.hc-one.co.uk/
+2026-07-02 08:07:12 | INFO     | __main__:73 — Company Name: Apply
+2026-07-02 08:07:12 | INFO     | __main__:74 — ============================================================
+2026-07-02 08:07:12 | INFO     | agent:140 — AI agent initialised with provider: openrouter
+2026-07-02 08:07:12 | INFO     | browser:61 — Launching Chromium (headless=False, slow_mo=400ms)

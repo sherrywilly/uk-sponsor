@@ -194,6 +194,7 @@ class ToolExecutor:
         elif tool == Tool.TYPE:
             selector = str(args.get("selector", ""))
             text = str(args.get("text", ""))
+            await bm._emit_action("browser.type", f"Typing into {selector}")
             await bm.page.click(selector, timeout=10_000)
             await bm.page.fill(selector, text)
             await bm._wait_for_network_idle()
@@ -219,11 +220,13 @@ class ToolExecutor:
 
         elif tool == Tool.WAIT:
             ms = min(int(args.get("ms", 1000)), 5000)
+            await bm._emit_action("browser.wait", f"Waiting for {ms}ms")
             await bm.page.wait_for_timeout(ms)
             return f"Waited {ms}ms"
 
         elif tool == Tool.SCREENSHOT:
             filename = str(args.get("filename", ""))
+            await bm._emit_action("browser.screenshot", f"Taking screenshot {filename or '(auto)'}")
             path = await self._take_screenshot(filename)
             return str(path)
 

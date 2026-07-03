@@ -1,0 +1,20 @@
+2026-07-02 08:15:44 | WARNING  | browser:38 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 08:15:44 | INFO     | __main__:70 — ============================================================
+2026-07-02 08:15:44 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 08:15:44 | INFO     | __main__:72 — Company URL : https://apply.hc-one.co.uk/
+2026-07-02 08:15:44 | INFO     | __main__:73 — Company Name: Apply
+2026-07-02 08:15:44 | INFO     | __main__:74 — ============================================================
+2026-07-02 08:15:44 | INFO     | agent:140 — AI agent initialised with provider: openrouter
+2026-07-02 08:15:44 | INFO     | browser:73 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 08:15:45 | INFO     | browser:93 — Browser ready.
+2026-07-02 08:15:45 | INFO     | career_finder:55 — Starting career-page search from: https://apply.hc-one.co.uk/
+2026-07-02 08:15:45 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/
+2026-07-02 08:15:47 | INFO     | career_finder:59 — Opened homepage.
+2026-07-02 08:15:47 | INFO     | career_finder:64 — Heuristic found careers page: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:47 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:49 | SUCCESS  | __main__:90 — Careers page located: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:49 | INFO     | job_scraper:105 — Starting job scrape from: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:49 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:51 | INFO     | job_scraper:118 — Scraping listing page: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:15:52 | INFO     | browser:98 — Shutting down browser.
+2026-07-02 08:15:52 | INFO     | browser:107 — Browser shut down.

@@ -1,0 +1,104 @@
+2026-07-02 10:12:24 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 10:12:25 | INFO     | __main__:70 — ============================================================
+2026-07-02 10:12:25 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 10:12:25 | INFO     | __main__:72 — Company URL : https://www.adtran.com/en
+2026-07-02 10:12:25 | INFO     | __main__:73 — Company Name: Adtran
+2026-07-02 10:12:25 | INFO     | __main__:74 — ============================================================
+2026-07-02 10:12:25 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 10:12:25 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 10:12:25 | INFO     | browser:98 — Browser ready.
+2026-07-02 10:12:25 | INFO     | career_finder:61 — Starting career-page search from: https://www.adtran.com/en
+2026-07-02 10:12:25 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en
+2026-07-02 10:12:28 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 10:12:28 | INFO     | career_finder:81 — Heuristic found careers page: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:28 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:30 | SUCCESS  | __main__:90 — Careers page located: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:30 | INFO     | job_scraper:128 — Starting job scrape from: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:30 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:33 | INFO     | job_scraper:141 — Scraping listing page: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:33 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:12:37 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_links": []
+}
+2026-07-02 10:12:37 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 10:12:37 | INFO     | job_scraper:154 — Found 70 job link(s) on this page.
+2026-07-02 10:12:37 | INFO     | job_scraper:168 — Opening job: Contact us — https://www.adtran.com/en/about-us/contact-us
+2026-07-02 10:12:37 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/contact-us
+2026-07-02 10:12:40 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:12:41 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:12:47 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": null,
+  "preferred_skills": null,
+  "visa_
+2026-07-02 10:12:47 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.adtran.com/en/about-us/contact-us
+2026-07-02 10:12:48 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:12:48 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:12:52 | INFO     | job_scraper:168 — Opening job: Log in — https://www.adtran.com/en/log-in
+2026-07-02 10:12:52 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/log-in
+2026-07-02 10:12:54 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:12:55 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:12:59 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": null,
+  "preferred_skills": null,
+  "visa_
+2026-07-02 10:12:59 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.adtran.com/en/log-in
+2026-07-02 10:13:01 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:13:01 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:13:03 | INFO     | job_scraper:168 — Opening job: Products and services — https://www.adtran.com/en/products-and-services
+2026-07-02 10:13:03 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/products-and-services
+2026-07-02 10:13:05 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:13:06 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:13:06 | ERROR    | job_scraper:261 — Error extracting job at https://www.adtran.com/en/products-and-services: 'NoneType' object is not subscriptable
+2026-07-02 10:13:08 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:13:08 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:13:10 | INFO     | job_scraper:168 — Opening job: Open optical networking — https://www.adtran.com/en/products-and-services/open-optical-networking
+2026-07-02 10:13:10 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/products-and-services/open-optical-networking
+2026-07-02 10:13:12 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:13:13 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:13:26 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": null,
+  "preferred_skills": null,
+  "visa_
+2026-07-02 10:13:26 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.adtran.com/en/products-and-services/open-optical-networking
+2026-07-02 10:13:28 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:13:28 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:13:30 | INFO     | job_scraper:168 — Opening job: Open line systems — https://www.adtran.com/en/products-and-services/open-line-systems
+2026-07-02 10:13:30 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/products-and-services/open-line-systems
+2026-07-02 10:13:32 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:13:32 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:13:39 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": null,
+  "preferred_skills": null,
+  "visa_
+2026-07-02 10:13:39 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.adtran.com/en/products-and-services/open-line-systems
+2026-07-02 10:13:40 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:13:40 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/about-us/careers
+2026-07-02 10:13:43 | INFO     | job_scraper:168 — Opening job: Optical terminals — https://www.adtran.com/en/products-and-services/optical-terminals
+2026-07-02 10:13:43 | INFO     | browser:118 — Navigating to: https://www.adtran.com/en/products-and-services/optical-terminals
+2026-07-02 10:13:44 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:13:45 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:13:46 | INFO     | browser:103 — Shutting down browser.

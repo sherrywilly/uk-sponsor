@@ -1,0 +1,36 @@
+2026-07-02 09:55:57 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 09:55:57 | INFO     | __main__:70 — ============================================================
+2026-07-02 09:55:57 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 09:55:57 | INFO     | __main__:72 — Company URL : https://www.careuk.com/careers/vacancies
+2026-07-02 09:55:57 | INFO     | __main__:73 — Company Name: Careuk
+2026-07-02 09:55:57 | INFO     | __main__:74 — ============================================================
+2026-07-02 09:55:57 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 09:55:57 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 09:55:58 | INFO     | browser:98 — Browser ready.
+2026-07-02 09:55:58 | INFO     | career_finder:61 — Starting career-page search from: https://www.careuk.com/careers/vacancies
+2026-07-02 09:55:58 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:05 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 09:56:05 | INFO     | career_finder:72 — Using current careers URL directly: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:05 | SUCCESS  | __main__:90 — Careers page located: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:05 | INFO     | job_scraper:128 — Starting job scrape from: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:05 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:11 | INFO     | job_scraper:141 — Scraping listing page: https://www.careuk.com/careers/vacancies
+2026-07-02 09:56:11 | DEBUG    | agent:244 — Calling OpenRouter (cohere/north-mini-code:free) …
+2026-07-02 09:59:01 | DEBUG    | agent:255 — OpenRouter response: 
+2026-07-02 09:59:01 | WARNING  | agent:275 — Could not parse JSON from LLM response: 
+2026-07-02 09:59:01 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 09:59:01 | INFO     | job_scraper:154 — Found 83 job link(s) on this page.
+2026-07-02 09:59:01 | INFO     | job_scraper:168 — Opening job: Find out more — https://www.careuk.com/careers/vacancies/sys-12179-cook-armadale-by-whitburn-west-lothian
+2026-07-02 09:59:01 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies/sys-12179-cook-armadale-by-whitburn-west-lothian
+2026-07-02 09:59:04 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:59:05 | DEBUG    | agent:244 — Calling OpenRouter (cohere/north-mini-code:free) …
+2026-07-02 10:00:46 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Cook",
+  "location": "Tippethill House Hospital, Armadale by Whitburn, West Lothian, EH48 3BQ",
+  "department": "Catering",
+  "employment_type": "Full time",
+  "salary": "Up to £14.3
+2026-07-02 10:00:46 | SUCCESS  | job_scraper:172 — Extracted job 1/5: 'Cook'
+2026-07-02 10:00:48 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:00:48 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:00:53 | INFO     | browser:103 — Shutting down browser.

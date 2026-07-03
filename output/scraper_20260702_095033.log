@@ -1,0 +1,114 @@
+2026-07-02 09:50:33 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 09:50:33 | INFO     | __main__:70 — ============================================================
+2026-07-02 09:50:33 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 09:50:33 | INFO     | __main__:72 — Company URL : https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:33 | INFO     | __main__:73 — Company Name: Apply
+2026-07-02 09:50:33 | INFO     | __main__:74 — ============================================================
+2026-07-02 09:50:33 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 09:50:33 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 09:50:34 | INFO     | browser:98 — Browser ready.
+2026-07-02 09:50:34 | INFO     | career_finder:61 — Starting career-page search from: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:34 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:36 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 09:50:36 | INFO     | career_finder:72 — Using current careers URL directly: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:36 | SUCCESS  | __main__:90 — Careers page located: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:36 | INFO     | job_scraper:128 — Starting job scrape from: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:36 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:38 | INFO     | job_scraper:141 — Scraping listing page: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:50:39 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:51:00 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_links": []
+}
+2026-07-02 09:51:00 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 09:51:00 | INFO     | job_scraper:154 — Found 11 job link(s) on this page.
+2026-07-02 09:51:00 | INFO     | job_scraper:168 — Opening job: Maintenance Operative — https://apply.hc-one.co.uk/vacancies/72668/maintenance-operative.html
+2026-07-02 09:51:00 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/72668/maintenance-operative.html
+2026-07-02 09:51:02 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:51:03 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:51:43 | DEBUG    | agent:255 — OpenRouter response: {"job_title":"Maintenance Operative","location":"Glasgow","department":"Maintenance","employment_type":null,"salary":"£13.78 to £14.13 per hour","job_description":"Responsible for ensuring residents l
+2026-07-02 09:51:43 | SUCCESS  | job_scraper:172 — Extracted job 1/5: 'Maintenance Operative'
+2026-07-02 09:51:44 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:51:44 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:51:46 | INFO     | job_scraper:168 — Opening job: Care Assistant — https://apply.hc-one.co.uk/vacancies/72667/care-assistant.html
+2026-07-02 09:51:46 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/72667/care-assistant.html
+2026-07-02 09:51:48 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:51:49 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:52:42 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Care Assistant",
+  "location": "East Grinstead",
+  "department": "Charters Court",
+  "employment_type": "Full-time",
+  "salary": "£14.80 to £15.30 per hour",
+  "job_description": "Ca
+2026-07-02 09:52:42 | SUCCESS  | job_scraper:172 — Extracted job 2/5: 'Care Assistant'
+2026-07-02 09:52:44 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:52:44 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:52:46 | INFO     | job_scraper:168 — Opening job: Clinical Lead — https://apply.hc-one.co.uk/vacancies/72666/clinical-lead.html
+2026-07-02 09:52:46 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/72666/clinical-lead.html
+2026-07-02 09:52:47 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:52:48 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:53:42 | DEBUG    | agent:255 — OpenRouter response: 
+
+{
+"job_title": "Clinical Lead",
+  "location": "East Grinstead",
+  "department": "Charters Court",
+  "employment_type": null,
+  "salary": "£24.82 to £25.82 per hour",
+  "job_description": "Responsibl
+2026-07-02 09:53:42 | SUCCESS  | job_scraper:172 — Extracted job 3/5: 'Clinical Lead'
+2026-07-02 09:53:44 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:53:44 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:53:46 | INFO     | job_scraper:168 — Opening job: Care Assistant — https://apply.hc-one.co.uk/vacancies/72665/care-assistant.html
+2026-07-02 09:53:46 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/72665/care-assistant.html
+2026-07-02 09:53:48 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:53:49 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:54:04 | DEBUG    | agent:255 — OpenRouter response: {"job_title":"Care Assistant","location":"West Lothian","department":"Redmill","employment_type":null,"salary":"£13.50 to £14.00 per hour","job_description":"Support residents’ physical, emotional and
+2026-07-02 09:54:04 | SUCCESS  | job_scraper:172 — Extracted job 4/5: 'Care Assistant'
+2026-07-02 09:54:06 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:54:06 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:54:08 | INFO     | job_scraper:168 — Opening job: Senior Care Assistant — https://apply.hc-one.co.uk/vacancies/72664/senior-care-assistant.html
+2026-07-02 09:54:08 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/72664/senior-care-assistant.html
+2026-07-02 09:54:11 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:54:12 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:54:17 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Senior Care Assistant",
+  "location": "Falkirk",
+  "department": "Carer",
+  "employment_type": "Permanent",
+  "salary": "£14.40 to £15.00 per hour",
+  "job_description": "Lead a team
+2026-07-02 09:54:17 | SUCCESS  | job_scraper:172 — Extracted job 5/5: 'Senior Care Assistant'
+2026-07-02 09:54:19 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:54:19 | INFO     | browser:118 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx
+2026-07-02 09:54:21 | DEBUG    | agent:244 — Calling OpenRouter (openrouter/free) …
+2026-07-02 09:54:24 | DEBUG    | agent:255 — OpenRouter response: User Safety: safe
+2026-07-02 09:54:24 | WARNING  | agent:275 — Could not parse JSON from LLM response: User Safety: safe
+2026-07-02 09:54:24 | INFO     | job_scraper:199 — Scraping complete. Total jobs extracted: 5
+2026-07-02 09:54:24 | SUCCESS  | csv_exporter:76 — Exported 5 job(s) to: output/jobs.csv
+2026-07-02 09:54:24 | INFO     | csv_exporter:84 — Timestamped backup saved to: output/apply_20260702_095424.csv
+2026-07-02 09:54:24 | INFO     | csv_exporter:118 — === Export Summary ===
+2026-07-02 09:54:24 | INFO     | csv_exporter:119 — Total jobs exported : 5
+2026-07-02 09:54:24 | INFO     | csv_exporter:123 — Top locations:
+Location
+East Grinstead    2
+Glasgow           1
+West Lothian      1
+Falkirk           1
+2026-07-02 09:54:24 | INFO     | csv_exporter:127 — Top departments:
+Department
+Charters Court    2
+Maintenance       1
+Redmill           1
+Carer             1
+2026-07-02 09:54:24 | INFO     | csv_exporter:131 — Visa sponsorship breakdown:
+Visa Sponsorship
+                                                                             3
+Applicants must have the right to work in the UK; no sponsorship offered     1
+No sponsorship offered, applicants must have full right to work in the UK    1
+2026-07-02 09:54:24 | INFO     | __main__:106 — ============================================================
+2026-07-02 09:54:24 | SUCCESS  | __main__:107 — Done! 5 job(s) saved to: output/jobs.csv
+2026-07-02 09:54:24 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 09:54:24 | INFO     | __main__:109 — ============================================================
+2026-07-02 09:54:24 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 09:54:24 | INFO     | browser:112 — Browser shut down.

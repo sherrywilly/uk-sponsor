@@ -29,28 +29,51 @@ from browser import BrowserManager
 _REQUEST_DELAY: float = 1.5
 
 # Maximum number of jobs to scrape in a single run (safety cap)
-_MAX_JOBS: int = 200
+_MAX_JOBS: int = 5
 
 # Regex patterns that usually indicate a "next page" / pagination link
 _NEXT_PAGE_RE = re.compile(r"\bnext\b|\bnext page\b|›|»|>", re.IGNORECASE)
+_JOB_URL_HINT_RE = re.compile(
+    r"job|jobs|vacanc|career|role|position|opening|requisition|req|apply",
+    re.IGNORECASE,
+)
+_NON_JOB_URL_RE = re.compile(
+    r"about|contact|privacy|cookie|terms|sitemap|benefit|reward|why-join|care-home|locations?",
+    re.IGNORECASE,
+)
 
 # ── Domain-specific prompts ───────────────────────────────────────────────────
 
-_JOB_LIST_SYSTEM = """
-You are an expert web-analysis AI. Given the HTML / text of a careers listing
-page, identify all job postings and return ONLY valid JSON (no markdown):
+_JOB_LIST_SYSTEM = r"""
+You are a job-link classifier. I will give you a numbered list of page links
+extracted from a careers/vacancies listing page.
 
+Your task: return ONLY those links that are individual job postings.
+
+Return ONLY valid JSON (no markdown, no explanation):
 {
   "job_links": [
-    {"title": "...", "url": "..."},
+    {"title": "<job title>", "url": "<full url>"},
     ...
   ]
 }
 
-Include every individual job posting URL you find. Do not include category pages,
-pagination links, or filter controls — only actual job listings.
-If no individual jobs are found (e.g. it's still a category landing page), return
-{"job_links": []}.
+Classification rules:
+- INCLUDE: links whose URL or title contains a specific job title, role name,
+  job ID, vacancy ID, or requisition number.
+- INCLUDE: URLs matching patterns like /job/123, /vacancy/456, /apply/789,
+  /sys-\d+-role-name, ?jobid=, ?vacancyid=, /req/.
+- EXCLUDE: navigation links, category pages, filter links, pagination,
+  home/about/contact/benefits/why-join/care-homes/locations pages.
+- EXCLUDE: URLs that are identical to the current listing page URL.
+
+Example — INCLUDE:
+  {"title": "Registered Nurse - London", "url": "https://example.com/jobs/12345"}
+
+Example — EXCLUDE:
+  {"title": "Why Join Us", "url": "https://example.com/careers/why-join"}
+
+If no individual jobs exist in the list, return {"job_links": []}.
 """
 
 _EXTRACTION_SYSTEM = """
@@ -79,6 +102,21 @@ For visa_sponsorship, look for:
   "Applicants must have the right to work in the UK").
 """
 
+_NEXT_PAGE_SYSTEM = """
+You are an expert web-navigation AI. Given a job-listing page HTML/text, find the
+URL of the next listings page (pagination).
+
+Return ONLY valid JSON (no markdown):
+{
+    "next_page_url": "..."  // absolute or relative URL, or null if none
+}
+
+Rules:
+- Return null if there is no next page.
+- Do not return the current page URL.
+- Do not return job-detail URLs; only listing pagination URL.
+"""
+
 
 class JobScraper:
     """
@@ -90,10 +128,17 @@ class JobScraper:
         jobs = await scraper.scrape(careers_url)
     """
 
-    def __init__(self, browser: BrowserManager, agent: AIAgent, company: str) -> None:
+    def __init__(
+        self,
+        browser: BrowserManager,
+        agent: AIAgent,
+        company: str,
+        max_jobs: int = _MAX_JOBS,
+    ) -> None:
         self._browser = browser
         self._agent = agent
         self._company = company
+        self._max_jobs = max(1, max_jobs)
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -107,7 +152,7 @@ class JobScraper:
         visited_listing_urls: set[str] = set()
         current_listing_url: str | None = careers_url
 
-        while current_listing_url and len(all_jobs) < _MAX_JOBS:
+        while current_listing_url and len(all_jobs) < self._max_jobs:
             if current_listing_url in visited_listing_urls:
                 logger.debug("Already visited listing: {}", current_listing_url)
                 break
@@ -132,7 +177,7 @@ class JobScraper:
 
             # Scrape each individual job
             for job_link in job_links:
-                if len(all_jobs) >= _MAX_JOBS:
+                if len(all_jobs) >= self._max_jobs:
                     break
 
                 job_url = job_link.get("url", "")
@@ -149,7 +194,7 @@ class JobScraper:
                     logger.success(
                         "Extracted job {}/{}: '{}'",
                         len(all_jobs),
-                        _MAX_JOBS,
+                        self._max_jobs,
                         job_data.get("job_title", "?"),
                     )
 
@@ -160,9 +205,18 @@ class JobScraper:
                 await self._browser.navigate(current_listing_url)
 
             # Check for a "Next page" link
-            current_listing_url = await self._find_next_page(
+            next_listing_url = await self._find_next_page(
                 current_listing_url, visited_listing_urls
             )
+            if not next_listing_url:
+                next_listing_url = await self._find_next_page_with_ai(
+                    page_text=page_text,
+                    page_html=page_html,
+                    current_url=current_listing_url,
+                    visited=visited_listing_urls,
+                )
+
+            current_listing_url = next_listing_url
 
         logger.info("Scraping complete. Total jobs extracted: {}", len(all_jobs))
         return all_jobs
@@ -173,23 +227,74 @@ class JobScraper:
         self, page_text: str, page_html: str, current_url: str
     ) -> list[dict]:
         """Ask the LLM to identify individual job URLs on the listing page."""
+        # Pre-extract all links with BeautifulSoup so the model gets a
+        # clean numbered list instead of raw HTML — much easier to classify.
+        soup = BeautifulSoup(page_html, "lxml")
+        raw_links: list[dict] = []
+        seen: set[str] = set()
+        for a in soup.find_all("a", href=True):
+            href = a["href"].strip()
+            if href.startswith(("#", "javascript:", "mailto:", "tel:")):
+                continue
+            abs_href = self._ensure_absolute(href, current_url)
+            if abs_href in seen:
+                continue
+            seen.add(abs_href)
+            title = (a.get_text(separator=" ") or "").strip()[:120]
+            raw_links.append({"title": title, "url": abs_href})
+
+        if not raw_links:
+            return []
+
+        # Format as a numbered list for the LLM
+        numbered = "\n".join(
+            f"{i+1}. [{item['title'] or '(no text)'}] {item['url']}"
+            for i, item in enumerate(raw_links[:200])
+        )
         user_prompt = (
-            f"Current URL: {current_url}\n\n"
-            f"=== PAGE TEXT (first 4000 chars) ===\n{page_text[:4000]}\n\n"
-            f"=== PAGE HTML SNIPPET (first 6000 chars) ===\n{page_html[:6000]}\n\n"
-            "Return all individual job listing URLs you can find."
+            f"Current listing page URL: {current_url}\n\n"
+            f"Links found on page ({len(raw_links)} total, showing first 200):\n"
+            f"{numbered}\n\n"
+            "Classify which of these are individual job postings."
         )
         data = await self._agent.call_with_prompt(_JOB_LIST_SYSTEM, user_prompt)
-        return data.get("job_links", [])
+        links = data.get("job_links", [])
+        return self._filter_probable_job_links(links, current_url)
+
+    # Known content-ready selectors for common JS-heavy job portals
+    _JS_FRAMEWORK_SELECTORS: list[str] = [
+        # Workday
+        "[data-automation-id='jobPostingHeader']",
+        "[data-automation-id='job-posting-details']",
+        "[data-automation-id='richTextContent']",
+        # Greenhouse
+        "#app_body", "#main",
+        # Lever
+        ".content-wrapper",
+        # SmartRecruiters
+        ".job-details",
+        # Generic fallback
+        "article", "main",
+    ]
 
     async def _extract_single_job(self, url: str) -> dict | None:
         """Navigate to a job page and extract structured data via the AI."""
         try:
             await self._browser.navigate(url)
+
+            # Extra wait for JS-rendered portals (Workday, Greenhouse, etc.)
+            await self._browser.wait_for_selector_any(self._JS_FRAMEWORK_SELECTORS)
             await self._browser.scroll_to_bottom()
 
             page_text = await self._browser.get_page_text()
             page_html = await self._browser.get_page_html()
+
+            # If page text is still empty, wait a bit more and retry once
+            if not page_text.strip():
+                logger.warning("Page text empty after JS wait; retrying in 3s: {}", url)
+                await self._browser.page.wait_for_timeout(3_000)
+                page_text = await self._browser.get_page_text()
+                page_html = await self._browser.get_page_html()
 
             user_prompt = (
                 f"Company: {self._company}\n"
@@ -217,6 +322,11 @@ class JobScraper:
                 "visa_sponsorship": raw.get("visa_sponsorship") or "",
                 "apply_url": raw.get("apply_url") or url,
             }
+
+            if not self._is_meaningful_job(job):
+                logger.warning("Skipping non-job/empty extraction for: {}", url)
+                return None
+
             return job
 
         except Exception as exc:
@@ -243,6 +353,40 @@ class JobScraper:
         except Exception as exc:
             logger.warning("Error looking for next page: {}", exc)
         return None
+
+    async def _find_next_page_with_ai(
+        self,
+        page_text: str,
+        page_html: str,
+        current_url: str,
+        visited: set[str],
+    ) -> str | None:
+        """
+        LLM fallback for pagination detection when regex/link heuristics fail.
+        """
+        try:
+            visited_list = sorted(list(visited))[-30:]
+            user_prompt = (
+                f"Current URL: {current_url}\n"
+                f"Visited listing URLs: {visited_list}\n\n"
+                f"=== PAGE TEXT (first 4000 chars) ===\n{page_text[:4000]}\n\n"
+                f"=== PAGE HTML SNIPPET (first 8000 chars) ===\n{page_html[:8000]}\n\n"
+                "Find the next listing page URL, if one exists."
+            )
+            data = await self._agent.call_with_prompt(_NEXT_PAGE_SYSTEM, user_prompt)
+            raw_url = data.get("next_page_url")
+            if not raw_url:
+                return None
+
+            next_url = self._ensure_absolute(str(raw_url), current_url)
+            if next_url == current_url or next_url in visited:
+                return None
+
+            logger.info("AI found next page: {}", next_url)
+            return next_url
+        except Exception as exc:
+            logger.warning("AI next-page detection failed: {}", exc)
+            return None
 
     @staticmethod
     def _heuristic_job_links(html: str, base_url: str) -> list[dict]:
@@ -284,6 +428,64 @@ class JobScraper:
                     results.append({"title": text[:120], "url": abs_href})
 
         return results
+
+    def _filter_probable_job_links(self, links: list[dict], current_url: str) -> list[dict]:
+        """Remove obvious non-job links from LLM/heuristic candidates."""
+        cleaned: list[dict] = []
+        seen: set[str] = set()
+
+        for link in links:
+            raw_url = str(link.get("url", "")).strip()
+            title = str(link.get("title", "")).strip()
+            if not raw_url:
+                continue
+
+            abs_url = self._ensure_absolute(raw_url, current_url)
+            if abs_url in seen:
+                continue
+
+            if self._is_probable_job_link(abs_url, title, current_url):
+                cleaned.append({"title": title, "url": abs_url})
+                seen.add(abs_url)
+
+        return cleaned
+
+    def _is_probable_job_link(self, url: str, title: str, current_url: str) -> bool:
+        """Conservative check to reduce navigation/footer links misclassified as jobs."""
+        url_l = url.lower()
+        title_l = title.lower()
+        current_l = current_url.lower().rstrip("/")
+
+        if url_l.rstrip("/") == current_l:
+            return False
+        if _NON_JOB_URL_RE.search(url_l) or _NON_JOB_URL_RE.search(title_l):
+            return False
+
+        # Strong positive signals in URL/title.
+        if _JOB_URL_HINT_RE.search(url_l) or _JOB_URL_HINT_RE.search(title_l):
+            return True
+
+        # IDs in query/path often indicate a specific posting.
+        if re.search(r"jobid=|vacancyid=|id=\d+|/\d{4,}", url_l):
+            return True
+
+        return False
+
+    @staticmethod
+    def _is_meaningful_job(job: dict) -> bool:
+        """Reject empty records so non-job pages cannot be exported as jobs."""
+        non_url_values = [
+            str(job.get("job_title", "")).strip(),
+            str(job.get("location", "")).strip(),
+            str(job.get("department", "")).strip(),
+            str(job.get("employment_type", "")).strip(),
+            str(job.get("salary", "")).strip(),
+            str(job.get("visa_sponsorship", "")).strip(),
+            str(job.get("required_skills", "")).strip(),
+            str(job.get("preferred_skills", "")).strip(),
+            str(job.get("job_description", "")).strip(),
+        ]
+        return any(non_url_values)
 
     @staticmethod
     def _ensure_absolute(url: str, base: str) -> str:

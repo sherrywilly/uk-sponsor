@@ -1,0 +1,35 @@
+2026-07-02 08:18:13 | WARNING  | browser:38 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 08:18:14 | INFO     | __main__:70 — ============================================================
+2026-07-02 08:18:14 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 08:18:14 | INFO     | __main__:72 — Company URL : https://apply.hc-one.co.uk/
+2026-07-02 08:18:14 | INFO     | __main__:73 — Company Name: Apply
+2026-07-02 08:18:14 | INFO     | __main__:74 — ============================================================
+2026-07-02 08:18:14 | INFO     | agent:140 — AI agent initialised with provider: openrouter
+2026-07-02 08:18:14 | INFO     | browser:73 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 08:18:14 | INFO     | browser:93 — Browser ready.
+2026-07-02 08:18:14 | INFO     | career_finder:55 — Starting career-page search from: https://apply.hc-one.co.uk/
+2026-07-02 08:18:14 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/
+2026-07-02 08:18:16 | INFO     | career_finder:59 — Opened homepage.
+2026-07-02 08:18:16 | INFO     | career_finder:64 — Heuristic found careers page: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:16 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:18 | SUCCESS  | __main__:90 — Careers page located: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:18 | INFO     | job_scraper:105 — Starting job scrape from: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:18 | INFO     | browser:113 — Navigating to: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:19 | INFO     | job_scraper:118 — Scraping listing page: https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true
+2026-07-02 08:18:20 | DEBUG    | agent:239 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 08:18:21 | DEBUG    | agent:250 — OpenRouter response: ```json
+{
+  "job_links": []
+}
+```
+2026-07-02 08:18:21 | INFO     | job_scraper:128 — AI found no job links; trying heuristic extraction.
+2026-07-02 08:18:21 | INFO     | job_scraper:131 — Found 0 job link(s) on this page.
+2026-07-02 08:18:21 | INFO     | job_scraper:167 — Scraping complete. Total jobs extracted: 0
+2026-07-02 08:18:21 | WARNING  | __main__:97 — No jobs were extracted from https://apply.hc-one.co.uk/vacancies/vacancy-search-results.aspx?SavedVacancies=true. The page may use a JS framework that renders asynchronously, or there are no open positions.
+2026-07-02 08:18:21 | WARNING  | csv_exporter:66 — No jobs to export.
+2026-07-02 08:18:21 | INFO     | __main__:106 — ============================================================
+2026-07-02 08:18:21 | SUCCESS  | __main__:107 — Done! 0 job(s) saved to: output/jobs.csv
+2026-07-02 08:18:21 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 08:18:21 | INFO     | __main__:109 — ============================================================
+2026-07-02 08:18:21 | INFO     | browser:98 — Shutting down browser.
+2026-07-02 08:18:21 | INFO     | browser:107 — Browser shut down.

@@ -1,0 +1,122 @@
+2026-07-02 10:04:01 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 10:04:01 | INFO     | __main__:70 — ============================================================
+2026-07-02 10:04:01 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 10:04:01 | INFO     | __main__:72 — Company URL : https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:01 | INFO     | __main__:73 — Company Name: Careuk
+2026-07-02 10:04:01 | INFO     | __main__:74 — ============================================================
+2026-07-02 10:04:01 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 10:04:01 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 10:04:01 | INFO     | browser:98 — Browser ready.
+2026-07-02 10:04:01 | INFO     | career_finder:61 — Starting career-page search from: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:01 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:09 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 10:04:09 | INFO     | career_finder:72 — Using current careers URL directly: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:09 | SUCCESS  | __main__:90 — Careers page located: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:09 | INFO     | job_scraper:128 — Starting job scrape from: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:09 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:16 | INFO     | job_scraper:141 — Scraping listing page: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:16 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:04:19 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_links": []
+}
+2026-07-02 10:04:19 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 10:04:19 | INFO     | job_scraper:154 — Found 83 job link(s) on this page.
+2026-07-02 10:04:19 | INFO     | job_scraper:168 — Opening job: Find out more — https://www.careuk.com/careers/vacancies/sys-12179-cook-armadale-by-whitburn-west-lothian
+2026-07-02 10:04:19 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies/sys-12179-cook-armadale-by-whitburn-west-lothian
+2026-07-02 10:04:25 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:04:26 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:04:41 | DEBUG    | agent:255 — OpenRouter response: {
+"job_title": "Cook",
+  "location": "Tippethill House Hospital, Armadale by Whitburn, West Lothian, EH48 3BQ",
+  "department": "Catering",
+  "employment_type": "Full-time Permanent",
+  "salary": "Up 
+2026-07-02 10:04:41 | SUCCESS  | job_scraper:172 — Extracted job 1/5: 'Cook'
+2026-07-02 10:04:43 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:04:43 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:04:50 | INFO     | job_scraper:168 — Opening job: Cook Bank — https://apply.careuk.com/vacancies/14584/apply/
+2026-07-02 10:04:50 | INFO     | browser:118 — Navigating to: https://apply.careuk.com/vacancies/14584/apply/
+2026-07-02 10:04:53 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:04:54 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:05:07 | DEBUG    | agent:255 — OpenRouter response: {
+"job_title": "Second Chef Bank",
+  "location": "Armadale by Whitburn, West Lothian",
+  "department": "Cook Bank",
+  "employment_type": "Bank",
+  "salary": null,
+  "job_description": null,
+  "require
+2026-07-02 10:05:07 | SUCCESS  | job_scraper:172 — Extracted job 2/5: 'Second Chef Bank'
+2026-07-02 10:05:08 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:05:08 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:05:15 | INFO     | job_scraper:168 — Opening job: Find out more — https://www.careuk.com/careers/vacancies/sys-14584-cook-bank-armadale-by-whitburn-west-lothian
+2026-07-02 10:05:15 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies/sys-14584-cook-bank-armadale-by-whitburn-west-lothian
+2026-07-02 10:05:21 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:05:22 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:05:37 | DEBUG    | agent:255 — OpenRouter response: {
+"job_title": "Cook Bank",
+  "location": "Tippethill House Hospital, Armadale by Whitburn, West Lothian, EH48 3BQ",
+  "department": "Catering",
+  "employment_type": "Bank",
+  "salary": "Up to £13.84 
+2026-07-02 10:05:37 | SUCCESS  | job_scraper:172 — Extracted job 3/5: 'Cook Bank'
+2026-07-02 10:05:38 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:05:38 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:05:45 | INFO     | job_scraper:168 — Opening job: Domestic Bank — https://apply.careuk.com/vacancies/8463/apply/
+2026-07-02 10:05:45 | INFO     | browser:118 — Navigating to: https://apply.careuk.com/vacancies/8463/apply/
+2026-07-02 10:05:49 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:05:50 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:06:07 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Domestic Bank",
+  "location": "Armadale by Whitburn, West Lothian",
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills":
+2026-07-02 10:06:07 | SUCCESS  | job_scraper:172 — Extracted job 4/5: 'Domestic Bank'
+2026-07-02 10:06:08 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:06:08 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:06:16 | INFO     | job_scraper:168 — Opening job: Find out more — https://www.careuk.com/careers/vacancies/sys-8463-domestic-bank-armadale-by-whitburn-west-lothian
+2026-07-02 10:06:16 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies/sys-8463-domestic-bank-armadale-by-whitburn-west-lothian
+2026-07-02 10:06:22 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:06:23 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:06:37 | DEBUG    | agent:255 — OpenRouter response: {
+"job_title": "Domestic Bank",
+  "location": "Tippethill House Hospital, Armadale by Whitburn, West Lothian, EH48 3BQ",
+  "department": null,
+  "employment_type": "Bank",
+  "salary": "Up to £12.71",
+
+2026-07-02 10:06:37 | SUCCESS  | job_scraper:172 — Extracted job 5/5: 'Domestic Bank'
+2026-07-02 10:06:39 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 10:06:39 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:06:46 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:06:55 | DEBUG    | agent:255 — OpenRouter response: {
+    "next_page_url": null
+}
+2026-07-02 10:06:55 | INFO     | job_scraper:199 — Scraping complete. Total jobs extracted: 5
+2026-07-02 10:06:55 | SUCCESS  | csv_exporter:76 — Exported 5 job(s) to: output/jobs.csv
+2026-07-02 10:06:55 | INFO     | csv_exporter:84 — Timestamped backup saved to: output/careuk_20260702_100655.csv
+2026-07-02 10:06:55 | INFO     | csv_exporter:118 — === Export Summary ===
+2026-07-02 10:06:55 | INFO     | csv_exporter:119 — Total jobs exported : 5
+2026-07-02 10:06:55 | INFO     | csv_exporter:123 — Top locations:
+Location
+Tippethill House Hospital, Armadale by Whitburn, West Lothian, EH48 3BQ    3
+Armadale by Whitburn, West Lothian                                         2
+2026-07-02 10:06:55 | INFO     | csv_exporter:127 — Top departments:
+Department
+Catering     2
+             2
+Cook Bank    1
+2026-07-02 10:06:55 | INFO     | csv_exporter:131 — Visa sponsorship breakdown:
+Visa Sponsorship
+                                                                                    3
+Visa sponsorship may be available; applicants must have right to work in the UK.    1
+Visa sponsorship considered; applicants must have the right to work in the UK       1
+2026-07-02 10:06:55 | INFO     | __main__:106 — ============================================================
+2026-07-02 10:06:55 | SUCCESS  | __main__:107 — Done! 5 job(s) saved to: output/jobs.csv
+2026-07-02 10:06:55 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 10:06:55 | INFO     | __main__:109 — ============================================================
+2026-07-02 10:06:55 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 10:06:56 | INFO     | browser:112 — Browser shut down.
