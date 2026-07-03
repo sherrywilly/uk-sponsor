@@ -1,0 +1,326 @@
+2026-07-02 09:21:15 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 09:21:16 | INFO     | __main__:70 — ============================================================
+2026-07-02 09:21:16 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 09:21:16 | INFO     | __main__:72 — Company URL : https://www.careuk.com/careers/vacancies
+2026-07-02 09:21:16 | INFO     | __main__:73 — Company Name: Careuk
+2026-07-02 09:21:16 | INFO     | __main__:74 — ============================================================
+2026-07-02 09:21:16 | INFO     | agent:141 — AI agent initialised with provider: openrouter
+2026-07-02 09:21:16 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 09:21:16 | INFO     | browser:98 — Browser ready.
+2026-07-02 09:21:16 | INFO     | career_finder:55 — Starting career-page search from: https://www.careuk.com/careers/vacancies
+2026-07-02 09:21:16 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 09:21:24 | INFO     | career_finder:59 — Opened homepage.
+2026-07-02 09:21:24 | INFO     | career_finder:64 — Heuristic found careers page: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:24 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:28 | SUCCESS  | __main__:90 — Careers page located: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:28 | INFO     | job_scraper:128 — Starting job scrape from: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:28 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:32 | INFO     | job_scraper:141 — Scraping listing page: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:32 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:21:34 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_links": []
+}
+```
+2026-07-02 09:21:34 | INFO     | job_scraper:151 — AI found no job links; trying heuristic extraction.
+2026-07-02 09:21:34 | INFO     | job_scraper:154 — Found 34 job link(s) on this page.
+2026-07-02 09:21:34 | INFO     | job_scraper:168 — Opening job: Care homes — https://www.careuk.com/
+2026-07-02 09:21:34 | INFO     | browser:118 — Navigating to: https://www.careuk.com/
+2026-07-02 09:21:37 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:21:38 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:21:40 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:21:40 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/
+2026-07-02 09:21:41 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:21:41 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:21:46 | INFO     | job_scraper:168 — Opening job: Find a care home — https://www.careuk.com/care-homes
+2026-07-02 09:21:46 | INFO     | browser:118 — Navigating to: https://www.careuk.com/care-homes
+2026-07-02 09:21:52 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:21:53 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:21:54 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:21:54 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/care-homes
+2026-07-02 09:21:55 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:21:55 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:01 | INFO     | job_scraper:168 — Opening job: Find Jobs — https://www.careuk.com/careers/vacancies
+2026-07-02 09:22:01 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 09:22:07 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:22:08 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:22:09 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:22:09 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/vacancies
+2026-07-02 09:22:11 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:22:11 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:15 | INFO     | job_scraper:168 — Opening job: Why join us — https://www.careuk.com/careers/why-join-us
+2026-07-02 09:22:15 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us
+2026-07-02 09:22:17 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:22:18 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:22:20 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:22:20 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us
+2026-07-02 09:22:22 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:22:22 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:25 | INFO     | job_scraper:168 — Opening job: Rewards and benefits — https://www.careuk.com/careers/why-join-us/rewards-and-benefits
+2026-07-02 09:22:25 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/rewards-and-benefits
+2026-07-02 09:22:28 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:22:29 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:22:31 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:22:31 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/rewards-and-benefits
+2026-07-02 09:22:32 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:22:32 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:37 | INFO     | job_scraper:168 — Opening job: Our values — https://www.careuk.com/careers/why-join-us/our-values
+2026-07-02 09:22:37 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/our-values
+2026-07-02 09:22:40 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:22:41 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:22:42 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:22:42 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/our-values
+2026-07-02 09:22:44 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:22:44 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:48 | INFO     | job_scraper:168 — Opening job: Learning and development — https://www.careuk.com/careers/why-join-us/learning-and-development
+2026-07-02 09:22:48 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development
+2026-07-02 09:22:50 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:22:51 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:22:52 | DEBUG    | agent:253 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "visa_spon
+2026-07-02 09:22:52 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/learning-and-development
+2026-07-02 09:22:54 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:22:54 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:22:57 | INFO     | job_scraper:168 — Opening job: A friendly induction — https://www.careuk.com/careers/why-join-us/learning-and-development/induction
+2026-07-02 09:22:57 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/induction
+2026-07-02 09:23:00 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:23:01 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:23:03 | DEBUG    | agent:253 — OpenRouter response: {
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "visa_spon
+2026-07-02 09:23:03 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/learning-and-development/induction
+2026-07-02 09:23:05 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:23:05 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:23:11 | INFO     | job_scraper:168 — Opening job: Our apprenticeships — https://www.careuk.com/careers/why-join-us/learning-and-development/apprenticeships
+2026-07-02 09:23:11 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/apprenticeships
+2026-07-02 09:23:15 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:23:16 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:23:18 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": "Care UK offers a range of apprenticeships for individuals at
+2026-07-02 09:23:18 | SUCCESS  | job_scraper:172 — Extracted job 1/5: ''
+2026-07-02 09:23:20 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:23:20 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:23:24 | INFO     | job_scraper:168 — Opening job: Development programmes — https://www.careuk.com/careers/why-join-us/learning-and-development/development-programmes
+2026-07-02 09:23:24 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/development-programmes
+2026-07-02 09:23:27 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:23:28 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:23:29 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:23:29 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/learning-and-development/development-programmes
+2026-07-02 09:23:31 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:23:31 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:23:38 | INFO     | job_scraper:168 — Opening job: Career progression — https://www.careuk.com/careers/why-join-us/learning-and-development/career-progression
+2026-07-02 09:23:38 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/career-progression
+2026-07-02 09:23:42 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:23:43 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:23:44 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:23:44 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/learning-and-development/career-progression
+2026-07-02 09:23:46 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:23:46 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:23:50 | INFO     | job_scraper:168 — Opening job: Wellbeing, diversity and inclusion — https://www.careuk.com/careers/why-join-us/wellbeing
+2026-07-02 09:23:50 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/wellbeing
+2026-07-02 09:23:53 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:23:54 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:23:55 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": null,
+  "required_skills": [],
+  "preferred_skills": [],
+  "v
+2026-07-02 09:23:55 | WARNING  | job_scraper:255 — Skipping non-job/empty extraction for: https://www.careuk.com/careers/why-join-us/wellbeing
+2026-07-02 09:23:57 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:23:57 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:24:01 | INFO     | job_scraper:168 — Opening job: Explore our roles — https://www.careuk.com/careers/explore-our-roles
+2026-07-02 09:24:01 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/explore-our-roles
+2026-07-02 09:24:05 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:24:06 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:24:09 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": null,
+  "location": null,
+  "department": null,
+  "employment_type": null,
+  "salary": null,
+  "job_description": "Discover careers at Care UK. Whether you're just starting a 
+2026-07-02 09:24:09 | SUCCESS  | job_scraper:172 — Extracted job 2/5: ''
+2026-07-02 09:24:11 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:24:11 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:24:15 | INFO     | job_scraper:168 — Opening job: Experienced care — https://www.careuk.com/careers/explore-our-roles/experienced-care
+2026-07-02 09:24:15 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/explore-our-roles/experienced-care
+2026-07-02 09:24:19 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:24:20 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:24:22 | DEBUG    | agent:253 — OpenRouter response: {
+  "job_title": "Experienced Carer",
+  "location": null,
+  "department": "Care Homes",
+  "employment_type": null,
+  "salary": null,
+  "job_description": "In an experienced carer role, you'll find ful
+2026-07-02 09:24:22 | SUCCESS  | job_scraper:172 — Extracted job 3/5: 'Experienced Carer'
+2026-07-02 09:24:24 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:24:24 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:24:28 | INFO     | job_scraper:168 — Opening job: Home support roles — https://www.careuk.com/careers/explore-our-roles/home-support-roles
+2026-07-02 09:24:28 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/explore-our-roles/home-support-roles
+2026-07-02 09:24:32 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:24:33 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:24:35 | DEBUG    | agent:253 — OpenRouter response: {
+  "job_title": "Home Support Roles",
+  "location": null,
+  "department": "Home Support",
+  "employment_type": null,
+  "salary": null,
+  "job_description": "In each of our care homes, home support co
+2026-07-02 09:24:35 | SUCCESS  | job_scraper:172 — Extracted job 4/5: 'Home Support Roles'
+2026-07-02 09:24:37 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:24:37 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:24:41 | INFO     | job_scraper:168 — Opening job: Home leadership — https://www.careuk.com/careers/explore-our-roles/home-leadership
+2026-07-02 09:24:41 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/explore-our-roles/home-leadership
+2026-07-02 09:24:45 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 09:24:46 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:24:48 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+  "job_title": "Home Manager",
+  "location": "UK",
+  "department": "Home leadership",
+  "employment_type": null,
+  "salary": null,
+  "job_description": "As part of the operational leadership
+2026-07-02 09:24:48 | SUCCESS  | job_scraper:172 — Extracted job 5/5: 'Home Manager'
+2026-07-02 09:24:50 | DEBUG    | job_scraper:182 — Returning to listings page.
+2026-07-02 09:24:50 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/why-join-us/learning-and-development/early-careers
+2026-07-02 09:24:54 | DEBUG    | agent:242 — Calling OpenRouter (openai/gpt-4o) …
+2026-07-02 09:24:55 | DEBUG    | agent:253 — OpenRouter response: ```json
+{
+    "next_page_url": null
+}
+```
+2026-07-02 09:24:55 | INFO     | job_scraper:199 — Scraping complete. Total jobs extracted: 5
+2026-07-02 09:24:55 | SUCCESS  | csv_exporter:76 — Exported 5 job(s) to: output/jobs.csv
+2026-07-02 09:24:55 | INFO     | csv_exporter:84 — Timestamped backup saved to: output/careuk_20260702_092455.csv
+2026-07-02 09:24:55 | INFO     | csv_exporter:118 — === Export Summary ===
+2026-07-02 09:24:55 | INFO     | csv_exporter:119 — Total jobs exported : 5
+2026-07-02 09:24:55 | INFO     | csv_exporter:123 — Top locations:
+Location
+      4
+UK    1
+2026-07-02 09:24:55 | INFO     | csv_exporter:127 — Top departments:
+Department
+                   2
+Care Homes         1
+Home Support       1
+Home leadership    1
+2026-07-02 09:24:55 | INFO     | csv_exporter:131 — Visa sponsorship breakdown:
+Visa Sponsorship
+                                                                                                                                                 4
+Our dedicated internal overseas team recruit, sponsor and relocate both nurses and carers who are already living in the UK and from overseas.    1
+2026-07-02 09:24:55 | INFO     | __main__:106 — ============================================================
+2026-07-02 09:24:55 | SUCCESS  | __main__:107 — Done! 5 job(s) saved to: output/jobs.csv
+2026-07-02 09:24:55 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 09:24:55 | INFO     | __main__:109 — ============================================================
+2026-07-02 09:24:55 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 09:24:55 | INFO     | browser:112 — Browser shut down.

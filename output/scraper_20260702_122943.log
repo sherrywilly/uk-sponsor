@@ -1,0 +1,33 @@
+2026-07-02 12:29:43 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 12:29:45 | INFO     | __main__:70 — ============================================================
+2026-07-02 12:29:45 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 12:29:45 | INFO     | __main__:72 — Company URL : http://avtechuk.com
+2026-07-02 12:29:45 | INFO     | __main__:73 — Company Name: Avtechuk
+2026-07-02 12:29:45 | INFO     | __main__:74 — ============================================================
+2026-07-02 12:29:45 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 12:29:45 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 12:29:56 | INFO     | browser:110 — Browser ready.
+2026-07-02 12:29:56 | INFO     | career_finder:61 — Starting career-page search from: http://avtechuk.com
+2026-07-02 12:29:56 | INFO     | browser:130 — Navigating to: http://avtechuk.com
+2026-07-02 12:29:58 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 12:29:58 | INFO     | career_finder:81 — Heuristic found careers page: http://avtechuk.com/careers.html
+2026-07-02 12:29:58 | INFO     | browser:130 — Navigating to: http://avtechuk.com/careers.html
+2026-07-02 12:30:14 | SUCCESS  | __main__:90 — Careers page located: http://avtechuk.com/careers.html
+2026-07-02 12:30:14 | INFO     | job_scraper:143 — Starting job scrape from: http://avtechuk.com/careers.html
+2026-07-02 12:30:14 | INFO     | browser:130 — Navigating to: http://avtechuk.com/careers.html
+2026-07-02 12:30:30 | INFO     | job_scraper:156 — Scraping listing page: http://avtechuk.com/careers.html
+2026-07-02 12:30:30 | INFO     | job_scraper:166 — AI found no job links; trying heuristic extraction.
+2026-07-02 12:30:30 | INFO     | job_scraper:169 — Found 0 job link(s) on this page.
+2026-07-02 12:30:33 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 12:30:37 | DEBUG    | agent:255 — OpenRouter response: {
+    "next_page_url": null
+}
+2026-07-02 12:30:37 | INFO     | job_scraper:214 — Scraping complete. Total jobs extracted: 0
+2026-07-02 12:30:37 | WARNING  | __main__:97 — No jobs were extracted from http://avtechuk.com/careers.html. The page may use a JS framework that renders asynchronously, or there are no open positions.
+2026-07-02 12:30:37 | WARNING  | csv_exporter:66 — No jobs to export.
+2026-07-02 12:30:37 | INFO     | __main__:106 — ============================================================
+2026-07-02 12:30:37 | SUCCESS  | __main__:107 — Done! 0 job(s) saved to: output/jobs.csv
+2026-07-02 12:30:37 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 12:30:37 | INFO     | __main__:109 — ============================================================
+2026-07-02 12:30:37 | INFO     | browser:115 — Shutting down browser.
+2026-07-02 12:30:37 | INFO     | browser:124 — Browser shut down.

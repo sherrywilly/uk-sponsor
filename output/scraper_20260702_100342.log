@@ -1,0 +1,20 @@
+2026-07-02 10:03:42 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 10:03:42 | INFO     | __main__:70 — ============================================================
+2026-07-02 10:03:42 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 10:03:42 | INFO     | __main__:72 — Company URL : https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:42 | INFO     | __main__:73 — Company Name: Careuk
+2026-07-02 10:03:42 | INFO     | __main__:74 — ============================================================
+2026-07-02 10:03:42 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 10:03:42 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 10:03:42 | INFO     | browser:98 — Browser ready.
+2026-07-02 10:03:42 | INFO     | career_finder:61 — Starting career-page search from: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:42 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:50 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 10:03:50 | INFO     | career_finder:72 — Using current careers URL directly: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:50 | SUCCESS  | __main__:90 — Careers page located: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:50 | INFO     | job_scraper:128 — Starting job scrape from: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:50 | INFO     | browser:118 — Navigating to: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:56 | INFO     | job_scraper:141 — Scraping listing page: https://www.careuk.com/careers/vacancies
+2026-07-02 10:03:56 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:03:57 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 10:03:57 | INFO     | browser:112 — Browser shut down.

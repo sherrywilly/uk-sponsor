@@ -1,0 +1,25 @@
+# git
+.git
+.gitignore
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# env / secrets
+.env
+
+# local output artifacts
+output/
+
+# frontend
+platform_dashboard/node_modules/
+platform_dashboard/dist/
+
+# editor
+.vscode/
+.idea/

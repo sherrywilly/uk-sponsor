@@ -1,0 +1,174 @@
+2026-07-02 10:20:44 | WARNING  | browser:40 — HEADLESS=false requested but no DISPLAY detected; forcing headless mode.
+2026-07-02 10:20:44 | INFO     | __main__:70 — ============================================================
+2026-07-02 10:20:44 | INFO     | __main__:71 — AI Career Discovery & Job Scraper  [Phase 2 — BrowserAgent]
+2026-07-02 10:20:44 | INFO     | __main__:72 — Company URL : https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:20:44 | INFO     | __main__:73 — Company Name: Adtran
+2026-07-02 10:20:44 | INFO     | __main__:74 — ============================================================
+2026-07-02 10:20:44 | INFO     | agent:143 — AI agent initialised with provider: openrouter
+2026-07-02 10:20:44 | INFO     | browser:78 — Launching Chromium (headless=True, slow_mo=400ms)
+2026-07-02 10:20:45 | INFO     | browser:98 — Browser ready.
+2026-07-02 10:20:45 | INFO     | career_finder:61 — Starting career-page search from: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:20:45 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:20:47 | INFO     | career_finder:65 — Opened homepage.
+2026-07-02 10:20:47 | INFO     | browser_agent:88 — BrowserAgent starting task: Navigate to the Careers or Jobs page of the company at https://adtran.wd3.myworkdayjobs.com/ADTRAN. The page may be labelled: Careers, Jobs, Join Us, Work With Us, Opportunities, Hiring, Vacancies, Open Positions, We're Hiring. Find the public live vacancies listing page, not personalised pages such as Saved Vacancies, Saved Jobs, Favourites, account, login, or register pages. Avoid URLs with query parameters like SavedVacancies=true. Once you are on the careers listing page, call done(result=<current_url>).
+2026-07-02 10:20:47 | INFO     | browser_agent:93 — ─── Iteration 1/20 ───
+2026-07-02 10:20:48 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:21:03 | DEBUG    | agent:255 — OpenRouter response: {
+  "reasoning": "The current URL is the base Workday careers page for ADTRAN. The OpenGraph metadata indicates the page title is 'Career Opportunities', suggesting this is already the careers listing
+2026-07-02 10:21:03 | INFO     | browser_agent:111 — AI reasoning: The current URL is the base Workday careers page for ADTRAN. The OpenGraph metadata indicates the page title is 'Career Opportunities', suggesting this is already the careers listing page. However, the page text is empty, likely because the content is loaded dynamically via JavaScript. We need to wait for the page to load and then verify if we are on the correct vacancies listing page. If not, we may need to navigate to the appropriate section.
+2026-07-02 10:21:03 | INFO     | browser_agent:112 — AI chose tool: wait  args: {'ms': 3000}
+2026-07-02 10:21:03 | INFO     | tools:163 — Tool call: wait(ms=3000)
+2026-07-02 10:21:06 | INFO     | browser_agent:93 — ─── Iteration 2/20 ───
+2026-07-02 10:21:06 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:21:16 | DEBUG    | agent:255 — OpenRouter response: {
+    "reasoning": "We are already on the ADTRAN Workday jobs page, which displays a list of vacancies. The URL is the base careers site and shows job listings without any personalized query parameter
+2026-07-02 10:21:16 | INFO     | browser_agent:111 — AI reasoning: We are already on the ADTRAN Workday jobs page, which displays a list of vacancies. The URL is the base careers site and shows job listings without any personalized query parameters. This matches the requirement for the public live vacancies listing page.
+2026-07-02 10:21:16 | INFO     | browser_agent:112 — AI chose tool: done  args: {'result': 'https://adtran.wd3.myworkdayjobs.com/ADTRAN'}
+2026-07-02 10:21:16 | SUCCESS  | browser_agent:117 — Task complete. Result: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:16 | INFO     | browser_agent:246 — Action log saved: output/action_log_20260702_102116.json
+2026-07-02 10:21:16 | SUCCESS  | career_finder:99 — BrowserAgent found careers page: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:16 | SUCCESS  | __main__:90 — Careers page located: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:16 | INFO     | job_scraper:143 — Starting job scrape from: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:16 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:19 | INFO     | job_scraper:156 — Scraping listing page: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:19 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:21:44 | DEBUG    | agent:255 — OpenRouter response: We need to output JSON with job_links array containing objects with title and url for each individual job posting.
+
+We have list of 27 items. Need to filter out navigation, etc.
+
+We need to include th
+2026-07-02 10:21:44 | WARNING  | agent:275 — Could not parse JSON from LLM response: We need to output JSON with job_links array containing objects with title and url for each individual job posting.
+
+We have list of 27 items. Need to filter out navigation, etc.
+
+We need to include those whose URL or title contains a specific job title, role name, job ID, vacancy ID, or requisition 
+2026-07-02 10:21:44 | INFO     | job_scraper:166 — AI found no job links; trying heuristic extraction.
+2026-07-02 10:21:44 | INFO     | job_scraper:169 — Found 21 job link(s) on this page.
+2026-07-02 10:21:44 | INFO     | job_scraper:183 — Opening job: Software Engineer I — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Atlanta-GA/Software-Engineer-I_R005699
+2026-07-02 10:21:44 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Atlanta-GA/Software-Engineer-I_R005699
+2026-07-02 10:21:47 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:21:48 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:21:48 | ERROR    | job_scraper:300 — Error extracting job at https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Atlanta-GA/Software-Engineer-I_R005699: 'NoneType' object is not subscriptable
+2026-07-02 10:21:50 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:21:50 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:21:53 | INFO     | job_scraper:183 — Opening job: Software Engineer I — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Atlanta-GA/Software-Engineer-I_R005655-1
+2026-07-02 10:21:53 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Atlanta-GA/Software-Engineer-I_R005655-1
+2026-07-02 10:21:56 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:21:57 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:22:23 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Software Engineer I",
+  "location": "Atlanta, GA",
+  "department": null,
+  "employment_type": "Full time",
+  "salary": null,
+  "job_description": "Welcome! Our Growth is Creating Gre
+2026-07-02 10:22:23 | SUCCESS  | job_scraper:187 — Extracted job 1/5: 'Software Engineer I'
+2026-07-02 10:22:24 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:22:24 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:22:27 | INFO     | job_scraper:183 — Opening job: Sales & Operations Planning Manager (M/F/D) — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Meiningen-Germany/Sales---Operations-Planning-Manager--M-F-D-_R005671
+2026-07-02 10:22:27 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Meiningen-Germany/Sales---Operations-Planning-Manager--M-F-D-_R005671
+2026-07-02 10:22:29 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:22:30 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:23:03 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Sales & Operations Planning Manager (M/F/D)",
+  "location": "Meiningen, Germany",
+  "department": "Global Supply Chain",
+  "employment_type": "Part time",
+  "salary": null,
+  "job_de
+2026-07-02 10:23:03 | SUCCESS  | job_scraper:187 — Extracted job 2/5: 'Sales & Operations Planning Manager (M/F/D)'
+2026-07-02 10:23:05 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:23:05 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:23:07 | INFO     | job_scraper:183 — Opening job: Software Engineer — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Raanana-Israel/Software-Engineer_R005641
+2026-07-02 10:23:07 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Raanana-Israel/Software-Engineer_R005641
+2026-07-02 10:23:10 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:23:11 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:23:25 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Software Engineer",
+  "location": "Ra’anana, Israel",
+  "department": "R&D",
+  "employment_type": "Full time",
+  "salary": null,
+  "job_description": "We are looking for a motivated 
+2026-07-02 10:23:25 | SUCCESS  | job_scraper:187 — Extracted job 3/5: 'Software Engineer'
+2026-07-02 10:23:26 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:23:26 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:23:30 | INFO     | job_scraper:183 — Opening job: Software Engineer II — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Software-Engineer-II_R005595
+2026-07-02 10:23:30 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Software-Engineer-II_R005595
+2026-07-02 10:23:33 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:23:34 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:23:55 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Software Engineer II",
+  "location": "Gdynia, Poland",
+  "department": null,
+  "employment_type": "Full time",
+  "salary": null,
+  "job_description": "Welcome! Our Growth is Creating
+2026-07-02 10:23:55 | SUCCESS  | job_scraper:187 — Extracted job 4/5: 'Software Engineer II'
+2026-07-02 10:23:56 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:23:56 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:23:59 | INFO     | job_scraper:183 — Opening job: Junior Software Engineer (Python/AWS) — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Junior-Software-Engineer--Python-AWS-_R005594
+2026-07-02 10:23:59 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Junior-Software-Engineer--Python-AWS-_R005594
+2026-07-02 10:24:02 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:24:03 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:24:22 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Junior Software Engineer (Python/AWS)",
+  "location": "Gdynia, Poland",
+  "department": null,
+  "employment_type": "Full time",
+  "salary": null,
+  "job_description": "Welcome! Our G
+2026-07-02 10:24:22 | WARNING  | agent:275 — Could not parse JSON from LLM response: {
+  "job_title": "Junior Software Engineer (Python/AWS)",
+  "location": "Gdynia, Poland",
+  "department": null,
+  "employment_type": "Full time",
+  "salary": null,
+  "job_description": "Welcome! Our Growth is Creating Great Opportunities! Our team is expanding, and we want to hire the most talented 
+2026-07-02 10:24:22 | WARNING  | job_scraper:276 — Empty extraction for: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Junior-Software-Engineer--Python-AWS-_R005594
+2026-07-02 10:24:23 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:24:23 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:24:26 | INFO     | job_scraper:183 — Opening job: Student (Software Engineer with Python) — https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Student--Software-Engineer-with-Python-_R005657-1
+2026-07-02 10:24:26 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/en-US/ADTRAN/job/Gdynia-Poland/Student--Software-Engineer-with-Python-_R005657-1
+2026-07-02 10:24:29 | DEBUG    | browser:125 — Scrolling to bottom of page.
+2026-07-02 10:24:30 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:24:40 | DEBUG    | agent:255 — OpenRouter response: {
+  "job_title": "Student (Software Engineer with Python)",
+  "location": "Gdynia, Poland",
+  "department": null,
+  "employment_type": "Full time",
+  "salary": "6,000PLN",
+  "job_description": "Welcom
+2026-07-02 10:24:40 | SUCCESS  | job_scraper:187 — Extracted job 5/5: 'Student (Software Engineer with Python)'
+2026-07-02 10:24:42 | DEBUG    | job_scraper:197 — Returning to listings page.
+2026-07-02 10:24:42 | INFO     | browser:118 — Navigating to: https://adtran.wd3.myworkdayjobs.com/ADTRAN
+2026-07-02 10:24:44 | DEBUG    | agent:244 — Calling OpenRouter (nvidia/nemotron-3-super-120b-a12b:free) …
+2026-07-02 10:24:49 | DEBUG    | agent:255 — OpenRouter response: {
+"next_page_url": "https://adtran.wd3.myworkdayjobs.com/ADTRAN?page=2"
+}
+2026-07-02 10:24:49 | INFO     | job_scraper:352 — AI found next page: https://adtran.wd3.myworkdayjobs.com/ADTRAN?page=2
+2026-07-02 10:24:49 | INFO     | job_scraper:214 — Scraping complete. Total jobs extracted: 5
+2026-07-02 10:24:49 | SUCCESS  | csv_exporter:76 — Exported 5 job(s) to: output/jobs.csv
+2026-07-02 10:24:49 | INFO     | csv_exporter:84 — Timestamped backup saved to: output/adtran_20260702_102449.csv
+2026-07-02 10:24:49 | INFO     | csv_exporter:118 — === Export Summary ===
+2026-07-02 10:24:49 | INFO     | csv_exporter:119 — Total jobs exported : 5
+2026-07-02 10:24:49 | INFO     | csv_exporter:123 — Top locations:
+Location
+Gdynia, Poland        2
+Atlanta, GA           1
+Meiningen, Germany    1
+Ra’anana, Israel      1
+2026-07-02 10:24:49 | INFO     | csv_exporter:127 — Top departments:
+Department
+                       3
+Global Supply Chain    1
+R&D                    1
+2026-07-02 10:24:49 | INFO     | csv_exporter:131 — Visa sponsorship breakdown:
+Visa Sponsorship
+    5
+2026-07-02 10:24:49 | INFO     | __main__:106 — ============================================================
+2026-07-02 10:24:49 | SUCCESS  | __main__:107 — Done! 5 job(s) saved to: output/jobs.csv
+2026-07-02 10:24:49 | INFO     | __main__:108 — Action logs and screenshots saved to: output/
+2026-07-02 10:24:49 | INFO     | __main__:109 — ============================================================
+2026-07-02 10:24:49 | INFO     | browser:103 — Shutting down browser.
+2026-07-02 10:24:49 | INFO     | browser:112 — Browser shut down.
